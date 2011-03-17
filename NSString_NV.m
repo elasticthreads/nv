@@ -5,20 +5,15 @@
 //  Created by Zachary Schneirov on 1/13/06.
 
 /*Copyright (c) 2010, Zachary Schneirov. All rights reserved.
-    This file is part of Notational Velocity.
-
-    Notational Velocity is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    Notational Velocity is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Notational Velocity.  If not, see <http://www.gnu.org/licenses/>. */
+  Redistribution and use in source and binary forms, with or without modification, are permitted 
+  provided that the following conditions are met:
+   - Redistributions of source code must retain the above copyright notice, this list of conditions 
+     and the following disclaimer.
+   - Redistributions in binary form must reproduce the above copyright notice, this list of 
+	 conditions and the following disclaimer in the documentation and/or other materials provided with
+     the distribution.
+   - Neither the name of Notational Velocity nor the names of its contributors may be used to endorse 
+     or promote products derived from this software without specific prior written permission. */
 
 #import "NSString_NV.h"
 #import "NSData_transformations.h"
@@ -490,25 +485,7 @@ BOOL IsHardLineBreakUnichar(unichar uchar, NSString *str, unsigned charIndex) {
 	
 	const char *utf8String = [(NSString*)str2 UTF8String];
 	
-	if (!utf8String) {
-		
-		CFStringEncoding encoding = CFStringGetFastestEncoding(str2);
-		const char *cStrPtr = CFStringGetCStringPtr(str2, encoding);
-		
-		if (cStrPtr && (kCFStringEncodingUTF8 == encoding || (encoding & 0x0100) == 0)) {
-			//-UTF8String failed, but the native cstringptr worked and was not a UTF16+ encoding
-			//so return that instead, forfeiting upper-ascii searchability for now
-			//(for whatever reason, native string encoding is almost never kCFStringEncodingUTF8, so CFStringGetFastestEncoding is called only if necessary)
-			utf8String = cStrPtr;
-			
-		} else {
-			//-UTF8String failed and CFStringGetCStringPtr was not a good fallback; try lossy MacOSRoman and pray
-			NSMutableData *nullTerminatedData = [[[(NSString*)str2 dataUsingEncoding:NSMacOSRomanStringEncoding allowLossyConversion:YES] mutableCopy] autorelease];
-			[nullTerminatedData appendBytes:"\0" length:1];
-			utf8String = [nullTerminatedData bytes];
-		}
-	}
-	[(id)str2 autorelease];
+	CFRelease(str2);
 	return utf8String;
 }
 
@@ -579,11 +556,7 @@ BOOL IsHardLineBreakUnichar(unichar uchar, NSString *str, unsigned charIndex) {
 
 - (NSData *)decodeBase64WithNewlines:(BOOL)encodedWithNewlines {
     // Create a memory buffer containing Base64 encoded string data
-	const char *utf8String = [self UTF8String];
-	if (!utf8String)
-		return nil;
-	
-    BIO * mem = BIO_new_mem_buf((void *)utf8String, strlen(utf8String));
+    BIO * mem = BIO_new_mem_buf((void *) [self UTF8String], strlen([self UTF8String]));
     
     // Push a Base64 filter so that reading from the buffer decodes it
     BIO * b64 = BIO_new(BIO_f_base64());
@@ -753,8 +726,7 @@ BOOL IsHardLineBreakUnichar(unichar uchar, NSString *str, unsigned charIndex) {
 + (NSCharacterSet*)listBulletsCharacterSet {
 	static NSCharacterSet *charSet = nil;
 	if (!charSet) {
-		charSet = [[NSCharacterSet characterSetWithCharactersInString:[NSString stringWithFormat:@"-+*!#%C%C%C%C%C%C%C", 
-																	   0x2022, 0x2014, 0x2013, 0x2043, 0x2713, 0x25AA, 0x25C6]] retain];
+		charSet = [[NSCharacterSet characterSetWithCharactersInString:[NSString stringWithFormat:@"-+*!%C%C%C", 0x2022, 0x2014, 0x2013]] retain];
 	}
 	
 	return charSet;

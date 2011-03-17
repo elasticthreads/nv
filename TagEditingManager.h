@@ -1,0 +1,25 @@
+//
+//  TagEditingManager.m
+//  Notation
+//
+//  Created by elasticthreads on 10/15/10.
+//
+
+#import <Cocoa/Cocoa.h>
+
+
+@interface TagEditingManager : NSObject {
+	
+   IBOutlet NSPanel *tagPanel;
+   IBOutlet NSTextField *tagField;
+}
+
+- (void)awakeFromNib;
+- (NSString *)newMultinoteLabels;
+- (void)setTF:(NSString *)inString;
+- (void)popTP:(id)sender;
+- (void)closeTP:(id)sender;
+- (void)setDel:(id)sender;
+- (NSPanel *)tagPanel;
+
+@end

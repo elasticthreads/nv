@@ -5,22 +5,17 @@
 //  Created by Zachary Schneirov on 12/19/05.
 
 /*Copyright (c) 2010, Zachary Schneirov. All rights reserved.
-    This file is part of Notational Velocity.
+  Redistribution and use in source and binary forms, with or without modification, are permitted 
+  provided that the following conditions are met:
+   - Redistributions of source code must retain the above copyright notice, this list of conditions 
+     and the following disclaimer.
+   - Redistributions in binary form must reproduce the above copyright notice, this list of 
+	 conditions and the following disclaimer in the documentation and/or other materials provided with
+     the distribution.
+   - Neither the name of Notational Velocity nor the names of its contributors may be used to endorse 
+     or promote products derived from this software without specific prior written permission. */
 
-    Notational Velocity is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    Notational Velocity is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Notational Velocity.  If not, see <http://www.gnu.org/licenses/>. */
-
-
+#import "AppController.h"
 #import "NotationController.h"
 #import "NSCollection_utils.h"
 #import "NoteObject.h"
@@ -1146,11 +1141,13 @@ bail:
 - (void)makeForegroundTextColorMatchGlobalPrefs {
 	NSColor *prefsFGColor = [notationPrefs foregroundColor];
 	if (prefsFGColor) {
-		NSColor *fgColor = [prefsController foregroundTextColor];
+		NSColor *fgColor = [[NSApp delegate] foregrndColor];
+		[self setForegroundTextColor:fgColor];
+		//NSColor *fgColor = [prefsController foregroundTextColor];
 		
-		if (!ColorsEqualWith8BitChannels(prefsFGColor, fgColor)) {			
-			[self setForegroundTextColor:fgColor];
-		}
+		//if (!ColorsEqualWith8BitChannels(prefsFGColor, fgColor)) {			
+		//	[self setForegroundTextColor:fgColor];
+		//}
 	}
 }
 

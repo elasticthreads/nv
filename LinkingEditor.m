@@ -1,20 +1,15 @@
 /*Copyright (c) 2010, Zachary Schneirov. All rights reserved.
-    This file is part of Notational Velocity.
+  Redistribution and use in source and binary forms, with or without modification, are permitted 
+  provided that the following conditions are met:
+   - Redistributions of source code must retain the above copyright notice, this list of conditions 
+     and the following disclaimer.
+   - Redistributions in binary form must reproduce the above copyright notice, this list of 
+	 conditions and the following disclaimer in the documentation and/or other materials provided with
+     the distribution.
+   - Neither the name of Notational Velocity nor the names of its contributors may be used to endorse 
+     or promote products derived from this software without specific prior written permission. */
 
-    Notational Velocity is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    Notational Velocity is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Notational Velocity.  If not, see <http://www.gnu.org/licenses/>. */
-
-
+#import "ETTransparentScroller.h"
 #import "LinkingEditor.h"
 #import "GlobalPrefs.h"
 #import "AppController.h"
@@ -75,33 +70,38 @@ CGFloat _perceptualDarkness(NSColor*a);
 	 @selector(setNoteBodyFont:sender:),
 	 @selector(setMakeURLsClickable:sender:),
 	 @selector(setSearchTermHighlightColor:sender:),
-	 @selector(setShouldHighlightSearchTerms:sender:),
-	 @selector(setBackgroundTextColor:sender:),
-	 @selector(setForegroundTextColor:sender:), nil];	
+	 @selector(setShouldHighlightSearchTerms:sender:), nil];	
+	// @selector(setBackgroundTextColor:sender:),
+	// @selector(setForegroundTextColor:sender:),
 	
 	[self setTextContainerInset:NSMakeSize(3, 8)];
 	[self setSmartInsertDeleteEnabled:NO];
 	[self setUsesRuler:NO];
 	[self setUsesFontPanel:NO];
-	[self setDrawsBackground:YES];
-	[self setBackgroundColor:[prefsController backgroundTextColor]];
-	[self updateTextColors];
+	[self setDrawsBackground:NO];
 	
+	nvTextScroller = [[[ETTransparentScroller alloc]init] retain];
+    //[nvTextScroller setControlSize:NSMiniControlSize];
+	[[self enclosingScrollView] setVerticalScroller:nvTextScroller];
+    
+	[[self enclosingScrollView] setAutohidesScrollers:YES];
+	[nvTextScroller setLionStyle:NO];
+	[self updateTextColors];
+	[[self enclosingScrollView] setDrawsBackground:NO];
 	[[self window] setAcceptsMouseMovedEvents:YES];
 	if (IsLeopardOrLater) {
 		defaultIBeamCursorIMP = method_getImplementation(class_getClassMethod([NSCursor class], @selector(IBeamCursor)));
 		whiteIBeamCursorIMP = method_getImplementation(class_getClassMethod([NSCursor class], @selector(whiteIBeamCursor)));
 	}
-
+	
 	didRenderFully = NO;
 	[[self layoutManager] setDelegate:self];
 	
 	NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
 	[center addObserver:self selector:@selector(windowBecameOrResignedMain:) name:NSWindowDidBecomeMainNotification object:[self window]];
 	[center addObserver:self selector:@selector(windowBecameOrResignedMain:) name:NSWindowDidResignMainNotification object:[self window]];
-	[center addObserver:self selector:@selector(updateTextColors) name:NSSystemColorsDidChangeNotification object:nil]; // recreate gradient if needed
-
-	
+	//[center addObserver:self selector:@selector(updateTextColors) name:NSSystemColorsDidChangeNotification object:nil]; // recreate gradient if needed
+//	NoMods = YES;
 	outletObjectAwoke(self);
 }
 
@@ -124,16 +124,15 @@ CGFloat _perceptualDarkness(NSColor*a);
 		
 		[self setLinkTextAttributes:[self preferredLinkAttributes]];
 		
-	} else if ([selectorString isEqualToString:SEL_STR(setBackgroundTextColor:sender:)]) {
+	//} else if ([selectorString isEqualToString:SEL_STR(setBackgroundTextColor:sender:)]) {
 		
 		//link-color is derived both from foreground and background colors
-		[self setBackgroundColor:[prefsController backgroundTextColor]];
-		[self updateTextColors];
+		//[self updateTextColors];
 		
-	} else if ([selectorString isEqualToString:SEL_STR(setForegroundTextColor:sender:)]) {
+	//} else if ([selectorString isEqualToString:SEL_STR(setForegroundTextColor:sender:)]) {
 		
-		[self updateTextColors];
-		[self setTypingAttributes:[prefsController noteBodyAttributes]];
+		//[self updateTextColors];
+		//[self setTypingAttributes:[prefsController noteBodyAttributes]];
 		
 	} else if ([selectorString isEqualToString:SEL_STR(setSearchTermHighlightColor:sender:)] || 
 			   [selectorString isEqualToString:SEL_STR(setShouldHighlightSearchTerms:sender:)]) {
@@ -192,13 +191,16 @@ CGFloat _perceptualDarkness(NSColor*a);
 }
 
 - (void)updateTextColors {
-	NSColor *fgColor = [prefsController foregroundTextColor];
-	NSColor *bgColor = [prefsController backgroundTextColor];
-	
+	NSColor *fgColor = [[NSApp delegate] foregrndColor];
+	NSColor *bgColor = [[NSApp delegate] backgrndColor];
+	[self setBackgroundColor:bgColor];
+	[nvTextScroller setBackgroundColor:bgColor];
+	[[self enclosingScrollView] setNeedsDisplay:YES];
 	[self setInsertionPointColor:[self _insertionPointColorForForegroundColor:fgColor backgroundColor:bgColor]];
 	[self setLinkTextAttributes:[self preferredLinkAttributes]];
 	[self setSelectedTextAttributes:[NSDictionary dictionaryWithObject:[self _selectionColorForForegroundColor:fgColor backgroundColor:bgColor] 
 																forKey:NSBackgroundColorAttributeName]];
+	[self setTypingAttributes:[prefsController noteBodyAttributes]];
 }
 
 #define _CM(__ch) ((__ch) * 255.0)
@@ -301,8 +303,16 @@ CGFloat _perceptualColorDifference(NSColor*a, NSColor*b) {
 	return [NSDictionary dictionaryWithObjectsAndKeys:
 			[NSCursor pointingHandCursor], NSCursorAttributeName,
 			[NSNumber numberWithInt:NSUnderlineStyleSingle], NSUnderlineStyleAttributeName,
-			[self _linkColorForForegroundColor:[prefsController foregroundTextColor] backgroundColor:[prefsController backgroundTextColor]],
+			[self _linkColorForForegroundColor:[[NSApp delegate] foregrndColor] backgroundColor:[[NSApp delegate] backgrndColor]],
 			NSForegroundColorAttributeName, nil];
+	
+	/*
+	 return [NSDictionary dictionaryWithObjectsAndKeys:
+	 [NSCursor pointingHandCursor], NSCursorAttributeName,
+	 [NSNumber numberWithInt:NSUnderlineStyleSingle], NSUnderlineStyleAttributeName,
+	 [self _linkColorForForegroundColor:[prefsController foregroundTextColor] backgroundColor:[prefsController backgroundTextColor]],
+	 NSForegroundColorAttributeName, nil];
+	 */
 }
 
 /*
@@ -704,16 +714,25 @@ copyRTFType:
 	didChangeIntoAutomaticRange = NO;
 	[self setSelectedRange:newRange];
 }
+/*
+- (IBAction)performNVFindPanelAction:(id)sender {
+	//NSLog(@"finding sender is :%@",[sender description]);
+	[[self window] endEditingFor:nil]; 
+	[self setUsesFindPanel:YES];
+	[super performFindPanelAction:sender];
+}*/
 
 - (IBAction)performFindPanelAction:(id)sender {
 	id controller = [NSApp delegate];
     NSString *typedString = [controller typedString];
 	NSString *currentFindString = nil;
-    
+	
     if (!typedString) typedString = [controlField stringValue];
 	typedString = [typedString stringByReplacingOccurrencesOfString:@"\"" withString:@""];
     
     NSTextFinder *textFinder = [NSTextFinder sharedTextFinder];
+	
+	[self switchFindPanelDelegate];
     if ([typedString length] > 0 && ![lastImportedFindString isEqualToString:typedString]) {
 		
 		NSPasteboard *pasteboard = [NSPasteboard pasteboardWithName:NSFindPboard];
@@ -738,7 +757,6 @@ copyRTFType:
     int rowNumber = -1;
     int totalNotes = [notesTableView numberOfRows];
     int tag = [sender tag];
-    
     if (![controller selectedNoteObject]) {
 		
 		rowNumber = (tag == NSFindPanelActionPrevious ? totalNotes - 1 : 0);
@@ -763,8 +781,9 @@ copyRTFType:
 	if ([controller selectedNoteObject])
 		[[self window] makeFirstResponder:self];
 	
-    [super performFindPanelAction:sender];
-	
+	//[textFinder setTextObjectToSearchIn:self];
+	[super performFindPanelAction:sender];
+	//NSLog(@"textfienders win resp: %@",[[[textFinder findPanel:YES] firstResponder]description]);NSFindPanelTextView
 	[stringDuringFind release];
 	stringDuringFind = [currentFindString retain];
 	noteDuringFind = [controller selectedNoteObject];
@@ -773,12 +792,11 @@ copyRTFType:
 }
 
 - (BOOL)performKeyEquivalent:(NSEvent *)anEvent {
-	
 	if ([anEvent modifierFlags] & NSCommandKeyMask) {
 		
 		unichar keyChar = [anEvent firstCharacterIgnoringModifiers];
 		if (keyChar == NSCarriageReturnCharacter || keyChar == NSNewlineCharacter || keyChar == NSEnterCharacter) {
-			
+		//	NSLog(@"insertion");
 			unsigned charIndex = [self selectedRange].location;
 			
 			id aLink = [self highlightLinkAtIndex:charIndex];
@@ -797,7 +815,13 @@ copyRTFType:
 	return [super performKeyEquivalent:anEvent];
 }
 
-- (void)keyDown:(NSEvent*)anEvent {
+- (void)flagsChanged:(NSEvent *)theEvent{
+	[[NSApp delegate] flagsChanged:theEvent];
+}
+
+
+- (void)keyDown:(NSEvent*)anEvent {	
+	
 	unichar keyChar = [anEvent firstCharacterIgnoringModifiers];
 
 	if (keyChar == NSBackTabCharacter) {
@@ -835,7 +859,7 @@ copyRTFType:
 
 - (void)insertTab:(id)sender {
 	//check prefs for tab behavior
-
+	
 	BOOL wasAutomatic = NO;
 	[self selectedRangeWasAutomatic:&wasAutomatic];
 	
@@ -848,7 +872,6 @@ copyRTFType:
 
 - (void)insertBacktab:(id)sender {
 	//check temporary NVHiddenBulletIndentAttributeName here first
-	
 	if ([prefsController autoFormatsListBullets] && [self _selectionAbutsBulletIndentRange]) {
 		
 		[self shiftLeftAction:nil];
@@ -1357,6 +1380,7 @@ static long (*GetGetScriptManagerVariablePointer())(short) {
 }
 
 - (void)insertNewline:(id)sender {
+//	NSLog(@"insertion2");
 	//reset custom styles after each line
 	[self setTypingAttributes:[prefsController noteBodyAttributes]];
 	
@@ -1412,8 +1436,15 @@ static long (*GetGetScriptManagerVariablePointer())(short) {
 
 - (void)setupFontMenu {
 	NSMenu *theMenu = [[[NSMenu alloc] initWithTitle:@"NVFontMenu"] autorelease];
-	
-	NSMenuItem *theMenuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Cut",@"cut menu item title") action:@selector(cut:) keyEquivalent:@""] autorelease];
+	NSMenuItem *theMenuItem;
+	if(IsLeopardOrLater){
+        theMenuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Toggle Fullscreen Mode",@"toggle fs menu item title") action:@selector(toggleFullscreen:) keyEquivalent:@""] autorelease];
+        [theMenuItem setTarget:[NSApp delegate]];
+        [theMenu addItem:theMenuItem]; 
+        
+        [theMenu addItem:[NSMenuItem separatorItem]];
+	}
+	theMenuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Cut",@"cut menu item title") action:@selector(cut:) keyEquivalent:@""] autorelease];
 	[theMenuItem setTarget:self];
 	[theMenu addItem:theMenuItem];
 	
@@ -1424,7 +1455,6 @@ static long (*GetGetScriptManagerVariablePointer())(short) {
 	theMenuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Paste",@"paste menu item title") action:@selector(paste:) keyEquivalent:@""] autorelease];
 	[theMenuItem setTarget:self];
 	[theMenu addItem:theMenuItem];
-	
 	[theMenu addItem:[NSMenuItem separatorItem]];
 	
 	NSMenu *formatMenu = [[[NSMenu alloc] initWithTitle:NSLocalizedString(@"Format", nil)] autorelease];
@@ -1530,6 +1560,61 @@ static long (*GetGetScriptManagerVariablePointer())(short) {
 - (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
 	[super dealloc];
+}
+
+
+//elasticwork
+- (void)switchFindPanelDelegate{
+	NSTextFinder *textFinder = [NSTextFinder sharedTextFinder];
+	if ([[[self window] className] isEqualToString:@"_NSFullScreenWindow"]) {
+		[[textFinder findPanel:YES] setDelegate:self];
+		NSArray *sViews = [[[textFinder findPanel:YES] contentView] subviews];
+		for (id thing in sViews){
+			if ([[thing className] isEqualToString:@"NSButton"]) {
+				NSButton *aBut = thing;
+				if (![aBut target]==nil) {
+					[aBut setTarget:self];
+					[aBut setAction:@selector(findInFullscreen:)];
+				}
+			}
+		}
+	}else {
+		[[textFinder findPanel:YES] setDelegate:textFinder];
+		NSArray *sViews = [[[textFinder findPanel:YES] contentView] subviews];
+		for (id thing in sViews){
+			if ([[thing className] isEqualToString:@"NSButton"]) {
+				NSButton *aBut = thing;
+				if (![aBut target]==nil) {
+					[aBut setTarget:textFinder];
+					[aBut setAction:@selector(performFindPanelAction:)];
+				}
+			}
+		}
+		
+	}
+	[[textFinder findPanel:YES] update];
+}
+
+- (IBAction)findInFullscreen:(id)sender{
+	int findTag = 1;
+	if ([[sender className] isEqualToString:@"NSButton"]) {
+		//NSLog(@"findinfull sender is :%@",[sender title]);
+		if ([[sender title] isEqualToString:@"Replace All"]) {
+			findTag = 4;
+		}else if ([[sender title] isEqualToString:@"Replace"]) {
+			findTag = 5;
+		}else if ([[sender title] isEqualToString:@"Replace & Find"]) {
+			findTag = 6;
+		}else if ([[sender title] isEqualToString:@"Replace"]) {
+			findTag = 5;
+		}else if ([[sender title] isEqualToString:@"Previous"]) {
+			findTag = 3;
+		}else if ([[sender title] isEqualToString:@"Next"]) {
+			findTag = 2;
+		}
+	}
+//	[[NSTextFinder sharedTextFinder] setFindString:[[NSTextFinder sharedTextFinder] findString] writeToPasteboard:NO updateUI:YES];
+	[[NSTextFinder sharedTextFinder] performFindPanelAction:findTag forClient:self];
 }
 
 @end

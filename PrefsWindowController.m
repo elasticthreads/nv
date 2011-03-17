@@ -1,20 +1,15 @@
 /*Copyright (c) 2010, Zachary Schneirov. All rights reserved.
-    This file is part of Notational Velocity.
+  Redistribution and use in source and binary forms, with or without modification, are permitted 
+  provided that the following conditions are met:
+   - Redistributions of source code must retain the above copyright notice, this list of conditions 
+     and the following disclaimer.
+   - Redistributions in binary form must reproduce the above copyright notice, this list of 
+	 conditions and the following disclaimer in the documentation and/or other materials provided with
+     the distribution.
+   - Neither the name of Notational Velocity nor the names of its contributors may be used to endorse 
+     or promote products derived from this software without specific prior written permission. */
 
-    Notational Velocity is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    Notational Velocity is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Notational Velocity.  If not, see <http://www.gnu.org/licenses/>. */
-
-
+#import "AppController.h"
 #import "PrefsWindowController.h"
 #import "PTKeyComboPanel.h"
 #import "PTKeyCombo.h"
@@ -43,6 +38,7 @@
 }
 
 - (void)showWindow:(id)sender {
+	//NSLog(@"showwin");
 	if (!window) {
 		if (![NSBundle loadNibNamed:@"Preferences" owner:self])  {
 			NSLog(@"Failed to load Preferences.nib");
@@ -52,6 +48,25 @@
 	
 	if (![window isVisible])
 		[window center];
+	
+	NSArray *appArray = [[NSApp delegate] getTxtAppList];
+	if (appArray) {
+		if ((![appList numberOfItems]>0)||(![[appList objectValues] isEqualToArray:appArray])) {		
+			[appList removeAllItems];
+			[appList addItemsWithObjectValues:appArray];
+			NSString *defApp = [prefsController textEditor];
+			if ((![appArray containsObject:defApp])&&(![defApp isEqualToString:@"Default"])) {	
+				defApp = @"Default";
+				[prefsController setTextEditor:@"Default"];
+			}
+			if ([defApp isEqualToString:@"Default"]) {
+				[appList selectItemAtIndex:0];
+			}else{
+				[appList selectItemWithObjectValue:defApp];
+			}
+		}
+	}
+
 	
 	[window makeKeyAndOrderFront:self];
 }
@@ -398,7 +413,23 @@
 	[highlightSearchTermsButton setState:[prefsController highlightSearchTerms]];
 	[foregroundColorWell setColor:[prefsController foregroundTextColor]];
 	[backgroundColorWell setColor:[prefsController backgroundTextColor]];
-    
+    [maxWidthSlider setDoubleValue:[[NSUserDefaults standardUserDefaults] doubleForKey:@"NoteBodyMaxWidth"]];
+	//for elasticthreads' hide dock icon option, check if OS compatible
+	if (IsSnowLeopardOrLater) {
+		[togDockButton setEnabled:YES];
+		
+		if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"HideDockIcon"] isEqualToString:@"Hide Dock Icon"]) {
+			[togDockLabel setStringValue:@"This will immediately restart NV"];		
+		}else {			
+			[togDockLabel setStringValue:@""];
+		}
+
+	}else {	
+		[togDockButton setEnabled:NO];
+		[togDockLabel setStringValue:@"Sorry, requires Snow Leopard"];
+	}
+	
+	
     items = [[NSMutableDictionary alloc] init];
     
     [self addToolbarItemWithName:@"General"];
@@ -504,6 +535,91 @@ NSRect ScaleRectWithFactor(NSRect rect, float factor) {
 	//these may still need to be rounded up
 	
 	return newRect;
+}
+
+//elasticwork
+
+- (IBAction)toggleHideDockIcon:(id)sender{
+	@try {		
+		if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"HideDockIcon"] isEqualToString:@"Show Dock Icon"]) {		
+			// Write new plist to file using dictionary
+			[NSApp hide:self];
+			if((IsSnowLeopardOrLater)&&([[NSApplication sharedApplication] respondsToSelector: @selector(setActivationPolicy:)] )) {
+				enum {NSApplicationActivationPolicyRegular};	
+				[[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyRegular];
+			}else {
+				ProcessSerialNumber psn = { 0, kCurrentProcess }; 
+				OSStatus returnCode = TransformProcessType(&psn, kProcessTransformToForegroundApplication);
+				if( returnCode != 0) {
+					NSLog(@"Could not bring the application to front. Error %d", returnCode);
+				}
+			}
+
+			[[NSUserDefaults standardUserDefaults] setValue:@"Hide Dock Icon" forKey:@"HideDockIcon"];
+			[togDockLabel setStringValue:@"This will immediately restart NV"];
+			[[NSUserDefaults standardUserDefaults] synchronize];		
+			[self performSelector:@selector(reActivate:) withObject:self afterDelay:.16];
+		}else {
+			[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"StatusBarItem"];
+			[[NSUserDefaults standardUserDefaults] setValue:@"Show Dock Icon" forKey:@"HideDockIcon"];
+			[[NSUserDefaults standardUserDefaults] synchronize];		
+			[self performSelector:@selector(relaunchNV:) withObject:self afterDelay:.22];
+			
+		}
+	}
+	@catch (NSException * e) {
+		NSLog(@"oops1 >%@<",[e name]);
+	}
+}
+
+- (void)reActivate:(id)sender{
+	[[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+
+}
+
+- (void)relaunchNV:(id)sender{
+	id fullPath = [[NSBundle mainBundle] executablePath];
+	NSArray *arg = [NSArray arrayWithObjects:nil];    
+	[NSTask launchedTaskWithLaunchPath:fullPath arguments:arg];
+	[NSApp terminate:self];
+}
+
+- (IBAction)toggleKeepsTextWidthInWindow:(id)sender{
+		[[NSApp delegate] setMaxNoteBodyWidth];
+}
+
+- (void)updateAppList:(id)sender{
+	NSArray *appArr = [[NSApp delegate] getTxtAppList];
+	NSString *defApp = [appList objectValueOfSelectedItem];
+	if ((![[appList objectValues] isEqualToArray:appArr])||(![appArr containsObject:defApp])) {
+		[appList removeAllItems];
+		[appList addItemsWithObjectValues:appArr];
+		[prefsController setTextEditor:@"Default"];
+		[appList selectItemAtIndex:0];
+	}
+}
+
+- (IBAction)setMaxWidth:(id)sender{
+	double dbWidth = [maxWidthSlider doubleValue];	
+	dbWidth = dbWidth - fmod(dbWidth,2.0);
+	int theWidth = (int) dbWidth;
+	[prefsController setMaxNoteBodyWidth:theWidth];
+	[[NSApp delegate] setMaxNoteBodyWidth];
+}
+
+//delegate methods for text editor application combobox
+- (void)comboBoxSelectionDidChange:(NSNotification *)notification{
+	NSString *defApp = [appList objectValueOfSelectedItem];
+	if (defApp) {	
+		if ([defApp hasPrefix:@"Default"]) {
+			defApp = @"Default";
+		}
+		[prefsController setTextEditor:defApp];
+	}
+}
+
+- (void)comboBoxWillPopUp:(NSNotification *)notification{
+	[self updateAppList:self];
 }
 
 @end

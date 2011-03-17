@@ -1,18 +1,13 @@
 /*Copyright (c) 2010, Zachary Schneirov. All rights reserved.
-    This file is part of Notational Velocity.
-
-    Notational Velocity is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    Notational Velocity is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Notational Velocity.  If not, see <http://www.gnu.org/licenses/>. */
+ Redistribution and use in source and binary forms, with or without modification, are permitted 
+ provided that the following conditions are met:
+ - Redistributions of source code must retain the above copyright notice, this list of conditions 
+ and the following disclaimer.
+ - Redistributions in binary form must reproduce the above copyright notice, this list of 
+ conditions and the following disclaimer in the documentation and/or other materials provided with
+ the distribution.
+ - Neither the name of Notational Velocity nor the names of its contributors may be used to endorse 
+ or promote products derived from this software without specific prior written permission. */
 
 
 #import "NotesTableView.h"
@@ -27,7 +22,8 @@
 #import "UnifiedCell.h"
 #import "HeaderViewWithMenu.h"
 #import "NSString_NV.h"
-#import "LinkingEditor.h"
+#import "NotesTableHeaderCell.h"
+//#import "NotesTableCornerView.h"
 
 #define STATUS_STRING_FONT_SIZE 16.0f
 #define SET_DUAL_HIGHLIGHTS 0
@@ -41,74 +37,75 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 //there's something wrong with this initialization under panther, I think
 - (id)initWithCoder:(NSCoder *)decoder {
     if ((self = [super initWithCoder:decoder])) {
-	
-	globalPrefs = [GlobalPrefs defaultPrefs];
 		
-	loadStatusString = NSLocalizedString(@"Loading Notes...",nil);
-	loadStatusAttributes = [[NSDictionary dictionaryWithObjectsAndKeys:
-		[NSFont fontWithName:@"Helvetica" size:STATUS_STRING_FONT_SIZE], NSFontAttributeName,
-		[NSColor colorWithCalibratedRed:0.0f green:0.0f blue:0.0f alpha:0.5f], NSForegroundColorAttributeName, nil] retain];
-	loadStatusStringWidth = [loadStatusString sizeWithAttributes:loadStatusAttributes].width;
-	
-	affinity = 0;
-	shouldUseSecondaryHighlightColor = viewMenusValid = NO;
-	firstRowIndexBeforeSplitResize = NSNotFound;
-	
-	headerView = [[HeaderViewWithMenu alloc] init];
-	[headerView setTableView:self];
-	[headerView setFrame:[[self headerView] frame]];
-	cornerView = [[self cornerView] retain];
-	
-	NSArray *columnsToDisplay = [globalPrefs visibleTableColumns];
-	allColumns = [[NSMutableArray alloc] initWithCapacity:4];
-	allColsDict = [[NSMutableDictionary alloc] initWithCapacity:4];
+		globalPrefs = [GlobalPrefs defaultPrefs];
 		
-	id (*titleReferencor)(id, id, NSInteger) = [globalPrefs horizontalLayout] ? 
+		loadStatusString = NSLocalizedString(@"Loading Notes...",nil);
+		loadStatusAttributes = [[NSDictionary dictionaryWithObjectsAndKeys:
+								 [NSFont fontWithName:@"Helvetica" size:STATUS_STRING_FONT_SIZE], NSFontAttributeName,
+								 [NSColor colorWithCalibratedRed:0.0f green:0.0f blue:0.0f alpha:0.5f], NSForegroundColorAttributeName, nil] retain];
+		loadStatusStringWidth = [loadStatusString sizeWithAttributes:loadStatusAttributes].width;
+		
+		affinity = 0;
+		shouldUseSecondaryHighlightColor = viewMenusValid = NO;
+		firstRowIndexBeforeSplitResize = NSNotFound;
+		
+		headerView = [[HeaderViewWithMenu alloc] init];
+		[headerView setTableView:self];
+		[headerView setFrame:[[self headerView] frame]];
+		//	cornerView = [[self cornerView] retain];	
+		[self setCornerView:nil];	
+		//cornerView =[[[NotesTableCornerView alloc] initWithFrame:[[self cornerView] bounds]] retain];
+		NSArray *columnsToDisplay = [globalPrefs visibleTableColumns];
+		allColumns = [[NSMutableArray alloc] initWithCapacity:4];
+		allColsDict = [[NSMutableDictionary alloc] initWithCapacity:4];
+		
+		id (*titleReferencor)(id, id, NSInteger) = [globalPrefs horizontalLayout] ? 
 		([globalPrefs tableColumnsShowPreview] ? unifiedCellForNote : unifiedCellSingleLineForNote) :
 		([globalPrefs tableColumnsShowPreview] ? tableTitleOfNote : titleOfNote2);
-	
-	NSString *colStrings[] = { NoteTitleColumnString, NoteLabelsColumnString, NoteDateModifiedColumnString, NoteDateCreatedColumnString };
-	SEL colMutators[] = { @selector(setTitleString:), @selector(setLabelString:), NULL, NULL };
-	id (*colReferencors[])(id, id, NSInteger) = {titleReferencor, labelColumnCellForNote, dateModifiedStringOfNote, dateCreatedStringOfNote };
-	NSInteger (*sortFunctions[])(id*, id*) = { compareTitleString, compareLabelString, compareDateModified, compareDateCreated };
-	NSInteger (*reverseSortFunctions[])(id*, id*) = { compareTitleStringReverse, compareLabelStringReverse, compareDateModifiedReverse, 
-	    compareDateCreatedReverse };
-	
-	unsigned int i;
-	for (i=0; i<sizeof(colStrings)/sizeof(NSString*); i++) {
-	    NoteAttributeColumn *column = [[NoteAttributeColumn alloc] initWithIdentifier:colStrings[i]];
-	    [column setEditable:(colMutators[i] != NULL)];
-		[column setHeaderCell:[[[NoteTableHeaderCell alloc] initTextCell:[[NSBundle mainBundle] localizedStringForKey:colStrings[i] value:@"" table:nil]] autorelease]];
-
-	    [column setMutatingSelector:colMutators[i]];
-	    [column setDereferencingFunction:colReferencors[i]];
-	    [column setSortingFunction:sortFunctions[i]];
-	    [column setReverseSortingFunction:reverseSortFunctions[i]];
-		[column setResizingMask:NSTableColumnUserResizingMask];
 		
-		[allColsDict setObject:column forKey:colStrings[i]];
-		[allColumns addObject:column];
-	    [column release];
-	}
-	
-	[[self noteAttributeColumnForIdentifier:NoteLabelsColumnString] setDataCell: [[[LabelColumnCell alloc] init] autorelease]];
-	[self _configureAttributesForCurrentLayout];
-	[self setAllowsColumnSelection:NO];
-	//[self setVerticalMotionCanBeginDrag:NO];
-	
-	BOOL hideHeader = (([columnsToDisplay count] == 1 && [columnsToDisplay containsObject:NoteTitleColumnString]) || [globalPrefs horizontalLayout]);
-	if (hideHeader) {
-		[[self cornerView] setFrameOrigin:NSMakePoint(-1000,-1000)];
-		[self setCornerView:nil];
-	}
-	[self setHeaderView:hideHeader ? nil : headerView];
+		NSString *colStrings[] = { NoteTitleColumnString, NoteLabelsColumnString, NoteDateModifiedColumnString, NoteDateCreatedColumnString };
+		SEL colMutators[] = { @selector(setTitleString:), @selector(setLabelString:), NULL, NULL };
+		id (*colReferencors[])(id, id, NSInteger) = {titleReferencor, labelColumnCellForNote, dateModifiedStringOfNote, dateCreatedStringOfNote };
+		NSInteger (*sortFunctions[])(id*, id*) = { compareTitleString, compareLabelString, compareDateModified, compareDateCreated };
+		NSInteger (*reverseSortFunctions[])(id*, id*) = { compareTitleStringReverse, compareLabelStringReverse, compareDateModifiedReverse, 
+			compareDateCreatedReverse };
 		
-	[[self noteAttributeColumnForIdentifier:NoteTitleColumnString] setResizingMask:NSTableColumnUserResizingMask | NSTableColumnAutoresizingMask];
-	[self setColumnAutoresizingStyle:NSTableViewUniformColumnAutoresizingStyle];
+		unsigned int i;
+		for (i=0; i<sizeof(colStrings)/sizeof(NSString*); i++) {
+			NoteAttributeColumn *column = [[NoteAttributeColumn alloc] initWithIdentifier:colStrings[i]];
+			[column setEditable:(colMutators[i] != NULL)];
+			[column setHeaderCell:[[[NotesTableHeaderCell alloc] initTextCell:[[NSBundle mainBundle] localizedStringForKey:colStrings[i] value:@"" table:nil]] autorelease]];
+			
+			[column setMutatingSelector:colMutators[i]];
+			[column setDereferencingFunction:colReferencors[i]];
+			[column setSortingFunction:sortFunctions[i]];
+			[column setReverseSortingFunction:reverseSortFunctions[i]];
+			[column setResizingMask:NSTableColumnUserResizingMask];
+			
+			[allColsDict setObject:column forKey:colStrings[i]];
+			[allColumns addObject:column];
+			[column release];
+		}
 		
-	//[self setSortDirection:[globalPrefs tableIsReverseSorted] 
-	//		 inTableColumn:[self tableColumnWithIdentifier:[globalPrefs sortedTableColumnKey]]];
-	
+		[[self noteAttributeColumnForIdentifier:NoteLabelsColumnString] setDataCell: [[[LabelColumnCell alloc] init] autorelease]];
+		[self _configureAttributesForCurrentLayout];
+		[self setAllowsColumnSelection:NO];
+		//[self setVerticalMotionCanBeginDrag:NO];
+		
+		BOOL hideHeader = (([columnsToDisplay count] == 1 && [columnsToDisplay containsObject:NoteTitleColumnString]) || [globalPrefs horizontalLayout]);
+		if (hideHeader) {
+			[[self cornerView] setFrameOrigin:NSMakePoint(-1000,-1000)];
+			[self setCornerView:nil];
+		}
+		[self setHeaderView:hideHeader ? nil : headerView];
+		
+		[[self noteAttributeColumnForIdentifier:NoteTitleColumnString] setResizingMask:NSTableColumnUserResizingMask | NSTableColumnAutoresizingMask];
+		[self setColumnAutoresizingStyle:NSTableViewUniformColumnAutoresizingStyle];
+		
+		//[self setSortDirection:[globalPrefs tableIsReverseSorted] 
+		//		 inTableColumn:[self tableColumnWithIdentifier:[globalPrefs sortedTableColumnKey]]];
+		
     }
     return self;
 }
@@ -143,12 +140,12 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 		
 		[column updateWidthForHighlight];
 	}	
-		
+	
 	[self setAutosaveName:[globalPrefs horizontalLayout] ? @"unifiedNotesTable" : @"notesTable"];
 	[self setAutosaveTableColumns:YES];
 	
 	[self sizeToFit];
-
+	
 	[self setSortDirection:[globalPrefs tableIsReverseSorted] 
 			 inTableColumn:[self tableColumnWithIdentifier:[globalPrefs sortedTableColumnKey]]];
 }
@@ -167,15 +164,17 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 	
 	[center addObserver:self selector:@selector(windowDidResignMain:)
 				   name:NSWindowDidResignMainNotification object:[self window]];	
-	
+	//[self setb]
+    [[self enclosingScrollView] setDrawsBackground:NO];
+   // [self setBackgroundColor:[NSColor clearColor]];
 	outletObjectAwoke(self);
 }
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender {
-
+	
 	if ([sender draggingSource] == self)
 		return NO;
-
+	
 	return YES;
 }
 
@@ -191,7 +190,7 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 	
 	if ([sender draggingSource] == self)
 		return NO;
-		
+	
 	return [[NSApp delegate] addNotesFromPasteboard:[sender draggingPasteboard]];
 }
 
@@ -246,7 +245,7 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 }
 
 - (void)menuNeedsUpdate:(NSMenu *)menu {
-
+	
 	if (!viewMenusValid && [menu delegate] == (id)self) {
 		[menu setSubmenu:[self menuForColumnConfiguration:nil] forItem:[menu itemWithTag:97]];
 		[menu setSubmenu:[self menuForColumnSorting] forItem:[menu itemWithTag:98]];
@@ -262,7 +261,7 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 	}
 	[NSGraphicsContext saveGraphicsState];
     [[NSGraphicsContext currentContext] setShouldAntialias:NO];
-
+	
 	NSBezierPath *line = [NSBezierPath bezierPath];
     NSUInteger i;
 	
@@ -310,7 +309,7 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 	
 	if (IsLeopardOrLater)
 		[self setSelectionHighlightStyle:horiz ? NSTableViewSelectionHighlightStyleSourceList : NSTableViewSelectionHighlightStyleRegular];
-	[self setBackgroundColor: horiz ? [NSColor colorWithCalibratedWhite:0.98 alpha:1.0] : [NSColor whiteColor]];
+	//[self setBackgroundColor: horiz ? [NSColor colorWithCalibratedWhite:0.98 alpha:1.0] : [NSColor whiteColor]];
 	
 	NSLayoutManager *lm = [[NSLayoutManager alloc] init];
 	tableFontHeight = [lm defaultLineHeightForFont:font];
@@ -322,11 +321,11 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 	[self setIntercellSpacing:NSMakeSize(12, 2)];
 	
 	[self setGridStyleMask:horiz ? NSTableViewSolidHorizontalGridLineMask : NSTableViewGridNone];
-	[self setGridColor:[NSColor colorWithCalibratedWhite:0.882 alpha:1.0]];
+	//[self setGridColor:[NSColor colorWithCalibratedWhite:0.882 alpha:1.0]];
 }
 
 - (void)settingChangedForSelectorString:(NSString*)selectorString {
-
+	
 	if ([selectorString isEqualToString:SEL_STR(setTableFontSize:sender:)]) {
 		
 		[self _configureAttributesForCurrentLayout];
@@ -409,7 +408,7 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 	rowRect.origin.y -= offset;
 	
 	NSClipView *clipView = [[self enclosingScrollView] contentView];
-
+	
 	[clipView scrollToPoint:[clipView constrainScrollPoint:rowRect.origin]];
 	[[self enclosingScrollView] reflectScrolledClipView:clipView];
 }
@@ -490,7 +489,7 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 		//[headerView setTableView:newHeader ? self : nil];
 		[self setHeaderView:newHeader];
 		[self setCornerView:newHeader ? cornerView : nil];
-	
+		
 		if ([self respondsToSelector:@selector(_sizeRowHeaderToFitIfNecessary)]) {
 			//hopefully 10.5 has this
 			[self _sizeRowHeaderToFitIfNecessary];
@@ -522,7 +521,7 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 		NSBeep();
 		return;
 	}
-		
+	
     if ([[globalPrefs visibleTableColumns] containsObject:[column identifier]]) {
 		
 		if ([[globalPrefs visibleTableColumns] count] > 1) {
@@ -678,9 +677,10 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 	[noteLinkItem setKeyEquivalentModifierMask:NSCommandKeyMask|NSAlternateKeyMask];
 	[noteLinkItem setTarget:target];
 	[theMenu addItem:[noteLinkItem autorelease]];
-
+	
 	_CopyItemWithSelectorFromMenu(theMenu, notesMenu, @selector(exportNote:), target);
 	_CopyItemWithSelectorFromMenu(theMenu, notesMenu, @selector(revealNote:), target);
+	_CopyItemWithSelectorFromMenu(theMenu, notesMenu, @selector(openFileInEditor:), target);
 	
 	[theMenu addItem:[NSMenuItem separatorItem]];
 	
@@ -718,7 +718,7 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 
 #if SET_DUAL_HIGHLIGHTS
 - (BOOL)_shouldUseSecondaryHighlightColor {
-
+	
 	return shouldUseSecondaryHighlightColor;
 }
 #endif
@@ -786,9 +786,9 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 #define UPCHAR(x) ((x) == NSUpArrowFunctionKey || (x) == NSUpTextMovement)
 
 - (void)keyDown:(NSEvent*)theEvent {
-
+	
 	unichar keyChar = [theEvent firstCharacter];
-
+	
     if (keyChar == NSNewlineCharacter || keyChar == NSCarriageReturnCharacter || keyChar == NSEnterCharacter) {
 		unsigned int sel = [self selectedRow];
 		if (sel < (unsigned)[self numberOfRows] && [self numberOfSelectedRows] == 1) {
@@ -856,7 +856,7 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 		return;
 	}
 	
-
+	
 	NSWindow *win = [self window];
 	if ([win firstResponder] == self) {
 		//forward keystroke to first responder, which should be controlField's field editor
@@ -868,7 +868,6 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 }
 
 
-
 enum { kNext_Tag = 'j', kPrev_Tag = 'k' };
 
 //use this method to catch next note/prev note before View menu does
@@ -877,43 +876,27 @@ enum { kNext_Tag = 'j', kPrev_Tag = 'k' };
 	
 	unsigned mods = [theEvent modifierFlags];
 	
-	BOOL isControlKeyPressed = (mods & NSControlKeyMask) != 0;
-	BOOL isCommandKeyPressed = (mods & NSCommandKeyMask) != 0;
-
 	// Also catch Ctrl-J/-K to match the shortcuts of other apps
-	if ((isControlKeyPressed || isCommandKeyPressed) && ((mods & NSShiftKeyMask) == 0)) {
+	if (((mods & NSCommandKeyMask) || (mods & NSControlKeyMask)) && ((mods & NSShiftKeyMask) == 0)) {
 		
-		// Determine the keyChar:
 		unichar keyChar = ' '; 
-		if (isCommandKeyPressed) {
+		if (mods & NSCommandKeyMask) {
 			keyChar = [theEvent firstCharacter]; /*cannot use ignoringModifiers here as it subverts the Dvorak-Qwerty-CMD keyboard layout */
 		}
-		if (isControlKeyPressed) {
+		if (mods & NSControlKeyMask) {
 			keyChar = [theEvent firstCharacterIgnoringModifiers]; /* first gets '\n' when control key is set, so fall back to ignoringModifiers */
 		}
 		
-		// Handle J and K for both Control and Command
-		if ( keyChar == kNext_Tag || keyChar == kPrev_Tag ) {
+		if (keyChar == kNext_Tag || keyChar == kPrev_Tag) {
+			
 			if (mods & NSAlternateKeyMask) {
-				[self selectRowAndScroll:((keyChar == kNext_Tag) ? [self numberOfRows] - 1 :  0)];
+				[self selectRowAndScroll:(keyChar == kNext_Tag ? [self numberOfRows] - 1 :  0)];
 			} else {
-				[self _incrementNoteSelectionByTag:keyChar];
+				if (!dummyItem) dummyItem = [[NSMenuItem alloc] init];
+				[dummyItem setTag:keyChar];
+				
+				[self incrementNoteSelection:dummyItem];
 			}
-			return YES;
-		}
-
-		// Handle N and P, but only when Control is pressed
-		if ( (keyChar == 'n' || keyChar == 'p') && (!isCommandKeyPressed)) {
-			// Determine if the note editing pane is selected:
-			if (![[[self window] firstResponder] isKindOfClass:[LinkingEditor class]]) {
-				[self _incrementNoteSelectionByTag:(keyChar == 'n') ? kNext_Tag : kPrev_Tag];
-				return YES;
-			}
-		}
-
-		// Make Control-[ equivalent to Escape
-		if ( (keyChar == '[' ) && (!isCommandKeyPressed)) {
-			[self cancelOperation:nil];
 			return YES;
 		}
 	}
@@ -921,7 +904,10 @@ enum { kNext_Tag = 'j', kPrev_Tag = 'k' };
 	return [super performKeyEquivalent:theEvent];
 }
 
-- (void)_incrementNoteSelectionByTag:(NSInteger)tag {
+
+- (void)incrementNoteSelection:(id)sender {
+	
+	int tag = [sender tag];
 	int rowNumber = [self selectedRow];
 	int totalNotes = [self numberOfRows];
 	
@@ -936,10 +922,6 @@ enum { kNext_Tag = 'j', kPrev_Tag = 'k' };
 	[self selectRowAndScroll:rowNumber];
 }
 
-- (void)incrementNoteSelection:(id)sender {
-	[self _incrementNoteSelectionByTag:[sender tag]];
-}
-
 - (void)deselectAll:(id)sender {
 	
 	[super deselectAll:sender];
@@ -948,7 +930,7 @@ enum { kNext_Tag = 'j', kPrev_Tag = 'k' };
 }
 
 - (void)selectRowAndScroll:(NSInteger)row {
-
+	
 	if (row > -1 && row < [self numberOfRows]) {
 		[self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
 		[self scrollRowToVisible:row];
@@ -958,7 +940,7 @@ enum { kNext_Tag = 'j', kPrev_Tag = 'k' };
 - (BOOL)textView:(NSTextView *)aTextView doCommandBySelector:(SEL)command {
 	
 	if (command == @selector(moveToEndOfLine:) || command == @selector(moveToRightEndOfLine:)) {
-	
+		
 		NSEvent *event = [[self window] currentEvent];
 		if ([event type] == NSKeyDown && ![event isARepeat] && 
 			NSEqualRanges([aTextView selectedRange], NSMakeRange([[aTextView string] length], 0))) {
@@ -1006,7 +988,7 @@ enum { kNext_Tag = 'j', kPrev_Tag = 'k' };
 }
 
 - (NSArray *)textView:(NSTextView *)aTextView completions:(NSArray *)words  forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(NSInteger *)anIndex {
-
+	
 	if (charRange.location != NSNotFound) {
 		if (!IsLeopardOrLater)
 			goto getCompletions;
@@ -1026,10 +1008,10 @@ enum { kNext_Tag = 'j', kPrev_Tag = 'k' };
 			
 		getCompletions:
 			{
-			NSSet *existingWordSet = [NSSet setWithArray:[[aTextView string] labelCompatibleWords]];
-			NSArray *tags = [labelsListSource labelTitlesPrefixedByString:[[aTextView string] substringWithRange:charRange] 
-													  indexOfSelectedItem:anIndex minusWordSet:existingWordSet];
-			return tags;
+				NSSet *existingWordSet = [NSSet setWithArray:[[aTextView string] labelCompatibleWords]];
+				NSArray *tags = [labelsListSource labelTitlesPrefixedByString:[[aTextView string] substringWithRange:charRange] 
+														  indexOfSelectedItem:anIndex minusWordSet:existingWordSet];
+				return tags;
 			}
 		}
 	}
@@ -1079,7 +1061,7 @@ enum { kNext_Tag = 'j', kPrev_Tag = 'k' };
 }
 
 - (void)editColumn:(NSInteger)columnIndex row:(NSInteger)rowIndex withEvent:(NSEvent *)event select:(BOOL)flag {
-
+	
 	BOOL isTitleCol = [self columnWithIdentifier:NoteTitleColumnString] == columnIndex;
 	
 	//if event's mouselocation is inside rowIndex cell's tag rect and this edit is in horizontal mode in the title column
@@ -1215,5 +1197,29 @@ enum { kNext_Tag = 'j', kPrev_Tag = 'k' };
 		if (didRotate) [NSGraphicsContext restoreGraphicsState];
 	}
 }
+
+# pragma mark elasticthreads work
+- (void)flagsChanged:(NSEvent *)theEvent{
+	[[NSApp delegate] flagsChanged:theEvent];
+}
+
+- (void)setBackgroundColor:(NSColor *)color{
+    [super setBackgroundColor:color];
+    [NotesTableHeaderCell setBackgroundColor:color];
+    CGFloat fWhite;		
+    fWhite = [[color colorUsingColorSpaceName:NSCalibratedWhiteColorSpace] whiteComponent];
+    if (fWhite < 0.75f) {
+        if (fWhite<0.25f) {
+            fWhite += 0.22f;
+        }else {
+            fWhite += 0.16f;
+        }		
+    }else {
+        fWhite -= 0.20f;
+    }	
+    [self setGridColor:[NSColor colorWithCalibratedWhite:fWhite alpha:1.0f]];
+
+}
+
 
 @end

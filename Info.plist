@@ -132,38 +132,55 @@
 	<key>CFBundleExecutable</key>
 	<string>Notational Velocity</string>
 	<key>CFBundleGetInfoString</key>
-	<string>2.0 β4, Copyright © 2010 Zachary Schneirov, All Rights Reserved.</string>
+	<string>elasticNV 2.0.1 e4 by elasticthreads, based on NV 2.0 β4 Copyright © 2010 Zachary Schneirov, All Rights Reserved.</string>
 	<key>CFBundleIconFile</key>
 	<string>Notality</string>
 	<key>CFBundleIdentifier</key>
-	<string>net.notational.velocity</string>
+	<string>net.elasticthreads.nv</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0 β4</string>
+	<string>2.0.1 e4</string>
 	<key>CFBundleSignature</key>
 	<string>N†l√</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>net.notational.velocity</string>
+		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>nv</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
-	<string>7</string>
-	<key>LSMinimumSystemVersion</key>
-	<string>10.4</string>
-	<key>LSMinimumSystemVersionByArchitecture</key>
-	<dict>
-		<key>i386</key>
-		<string>10.4.4</string>
-		<key>x86_64</key>
-		<string>10.6.0</string>
-		<key>ppc</key>
-		<string>10.4</string>
-	</dict>
+	<string>47</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.productivity</string>
 	<key>LSArchitecturePriority</key>
 	<array>
 		<string>x86_64</string>
 		<string>i386</string>
 		<string>ppc</string>
 	</array>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.4.4</string>
+	<key>LSMinimumSystemVersionByArchitecture</key>
+	<dict>
+		<key>i386</key>
+		<string>10.4.4</string>
+		<key>x86_64</key>
+		<string>10.6.0</string>
+	</dict>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSAppleScriptEnabled</key>
+	<true/>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
@@ -197,29 +214,16 @@
 			</array>
 		</dict>
 	</array>
-	<key>SUCheckAtStartup</key>
-	<false/>
-	<key>SUScheduledCheckInterval</key>
-	<real>345600</real>
-	<key>SUFeedURL</key>
-	<string>http://notational.net/nvupdates.xml</string>
-	<key>NSAppleScriptEnabled</key>
-	<true/>
 	<key>OSAScriptingDefinition</key>
 	<string>Notation.sdef</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLName</key>
-			<string>net.notational.velocity</string>
-		</dict>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>nv</string>
-			</array>
-		</dict>
-	</array>
+	<key>SUCheckAtStartup</key>
+	<false/>
+	<key>SUFeedURL</key>
+	<string>https://sites.google.com/site/elasticnv/NVAppcast.xml?</string>
+	<key>SUPublicDSAKeyFile</key>
+	<string>dsa_pub.pem</string>
+	<key>SUScheduledCheckInterval</key>
+	<real>345600</real>
 	<key>SmartCrashReports_CompanyName</key>
 	<string>Notational.net</string>
 	<key>SmartCrashReports_EmailTicket</key>

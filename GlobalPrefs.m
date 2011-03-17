@@ -5,22 +5,17 @@
 //  Created by Zachary Schneirov on 1/31/06.
 
 /*Copyright (c) 2010, Zachary Schneirov. All rights reserved.
-    This file is part of Notational Velocity.
+  Redistribution and use in source and binary forms, with or without modification, are permitted 
+  provided that the following conditions are met:
+   - Redistributions of source code must retain the above copyright notice, this list of conditions 
+     and the following disclaimer.
+   - Redistributions in binary form must reproduce the above copyright notice, this list of 
+	 conditions and the following disclaimer in the documentation and/or other materials provided with
+     the distribution.
+   - Neither the name of Notational Velocity nor the names of its contributors may be used to endorse 
+     or promote products derived from this software without specific prior written permission. */
 
-    Notational Velocity is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    Notational Velocity is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Notational Velocity.  If not, see <http://www.gnu.org/licenses/>. */
-
-
+#import "AppController.h"
 #import "GlobalPrefs.h"
 #import "NSData_transformations.h"
 #import "NotationPrefs.h"
@@ -69,6 +64,17 @@ static NSString *LastScrollOffsetKey = @"LastScrollOffset";
 static NSString *LastSearchStringKey = @"LastSearchString";
 static NSString *LastSelectedNoteUUIDBytesKey = @"LastSelectedNoteUUIDBytes";
 static NSString *LastSelectedPreferencesPaneKey = @"LastSelectedPrefsPane";
+//elasticthreads prefs
+static NSString *StatusBarItem = @"StatusBarItem";
+static NSString	*HideDockIcon = @"HideDockIcon";
+static NSString	*KeepsMaxTextWidth = @"KeepsMaxTextWidth";
+static NSString	*NoteBodyMaxWidth = @"NoteBodyMaxWidth";
+static NSString	*ColorScheme = @"ColorScheme";
+static NSString	*TextEditor = @"TextEditor";
+static NSString *UseMarkdownImportKey = @"UseMarkdownImport";
+static NSString *UseReadabilityKey = @"UseReadability";
+static NSString *RTLKey = @"rtl";
+static NSString *ShowWordCount = @"ShowWordCount";
 //static NSString *PasteClipboardOnNewNoteKey = @"PasteClipboardOnNewNote";
 
 //these 4 strings manually localized
@@ -126,18 +132,28 @@ static void sendCallbacksForGlobalPrefs(GlobalPrefs* self, SEL selector, id orig
 			[NSNumber numberWithBool:YES], TableColumnsHaveBodyPreviewKey, 
 			[NSNumber numberWithDouble:0.0], LastScrollOffsetKey,
 			@"General", LastSelectedPreferencesPaneKey, 
+			[NSNumber numberWithBool:NO], StatusBarItem, 
+			[NSNumber numberWithBool:NO], KeepsMaxTextWidth,
+			[NSNumber numberWithInt:600], NoteBodyMaxWidth,
+			[NSNumber numberWithInt:0], ColorScheme,
+			@"Hide Dock Icon",HideDockIcon,
+			[NSNumber numberWithBool:NO], RTLKey,
+			[NSNumber numberWithBool:YES], ShowWordCount,
+			[NSNumber numberWithBool:NO], UseMarkdownImportKey,
+			[NSNumber numberWithBool:NO], UseReadabilityKey,
+			//@"Default",TextEditor,
 			
 			[NSArchiver archivedDataWithRootObject:
 			 [NSFont fontWithName:@"Helvetica" size:12.0f]], NoteBodyFontKey,
 			
-			[NSArchiver archivedDataWithRootObject:[NSColor blackColor]], ForegroundTextColorKey,
-			[NSArchiver archivedDataWithRootObject:[NSColor whiteColor]], BackgroundTextColorKey,
+			[NSArchiver archivedDataWithRootObject:[NSColor colorWithCalibratedRed:0.74f green:0.74f blue:0.74f alpha:1.0f]], ForegroundTextColorKey,
+			[NSArchiver archivedDataWithRootObject:[NSColor colorWithCalibratedRed:0.082f green:0.082f blue:0.082f alpha:1.0f]], BackgroundTextColorKey,
 			
 			[NSArchiver archivedDataWithRootObject:
 			 [NSColor colorWithCalibratedRed:0.945 green:0.702 blue:0.702 alpha:1.0f]], SearchTermHighlightColorKey,
 			
 			[NSNumber numberWithFloat:[NSFont smallSystemFontSize]], TableFontSizeKey, 
-			[NSArray arrayWithObjects:NoteTitleColumnString, NoteDateModifiedColumnString, nil], NoteAttributesVisibleKey,
+			[NSArray arrayWithObjects:NoteTitleColumnString, NoteLabelsColumnString, NoteDateModifiedColumnString, nil], NoteAttributesVisibleKey,
 			NoteDateModifiedColumnString, TableSortColumnKey,
 			[NSNumber numberWithBool:YES], TableIsReverseSortedKey, nil]];
 		
@@ -388,6 +404,40 @@ static void sendCallbacksForGlobalPrefs(GlobalPrefs* self, SEL selector, id orig
 	return [defaults boolForKey:MakeURLsClickableKey];
 }
 
+- (void)setRTL:(BOOL)value sender:(id)sender {
+	[defaults setBool:value forKey:RTLKey];
+	
+	SEND_CALLBACKS();
+}
+- (BOOL)rtl {
+	return [defaults boolForKey:RTLKey];
+}
+
+- (BOOL)showWordCount{
+	return [defaults boolForKey:ShowWordCount];
+}
+
+- (void)setShowWordCount:(BOOL)value{
+	[defaults setBool:value forKey:ShowWordCount];
+}
+
+- (void)setUseMarkdownImport:(BOOL)value sender:(id)sender {
+	[defaults setBool:value forKey:UseMarkdownImportKey];
+	
+	SEND_CALLBACKS();
+}
+- (BOOL)useMarkdownImport {
+	return [defaults boolForKey:UseMarkdownImportKey];
+}
+- (void)setUseReadability:(BOOL)value sender:(id)sender {
+	[defaults setBool:value forKey:UseReadabilityKey];
+	
+	SEND_CALLBACKS();
+}
+- (BOOL)useReadability {
+	return [defaults boolForKey:UseReadabilityKey];
+}
+
 - (void)setShouldHighlightSearchTerms:(BOOL)shouldHighlight sender:(id)sender {
 	[defaults setBool:shouldHighlight forKey:HighlightSearchTermsKey];
 	
@@ -534,18 +584,23 @@ BOOL ColorsEqualWith8BitChannels(NSColor *c1, NSColor *c2) {
 
 - (NSDictionary*)noteBodyAttributes {
 	NSFont *bodyFont = [self noteBodyFont];
-	
 	if (!noteBodyAttributes && bodyFont) {
+		//NSLog(@"notebody att2");
 		
 		NSMutableDictionary *attrs = [[NSMutableDictionary dictionaryWithObjectsAndKeys:bodyFont, NSFontAttributeName, nil] retain];
 		
 		//not storing the foreground color in each note will make the database smaller, and black is assumed when drawing text
-		NSColor *fgColor = [self foregroundTextColor];
+		//NSColor *fgColor = [self foregroundTextColor];
+		NSColor *fgColor = [[NSApp delegate] foregrndColor];
+		
 		if (!ColorsEqualWith8BitChannels([NSColor blackColor], fgColor)) {
+		//	NSLog(@"golly1");
 			[attrs setObject:fgColor forKey:NSForegroundColorAttributeName];
 		}
 		// background text color is handled directly by the NSTextView subclass and so does not need to be stored here
 		if ([self _bodyFontIsMonospace]) {
+			
+		//	NSLog(@"notebody att3");
 			NSParagraphStyle *pStyle = [self noteBodyParagraphStyle];
 			if (pStyle)
 				[attrs setObject:pStyle forKey:NSParagraphStyleAttributeName];
@@ -553,7 +608,18 @@ BOOL ColorsEqualWith8BitChannels(NSColor *c1, NSColor *c2) {
 	   /*NSTextWritingDirectionEmbedding*/
 		//[NSArray arrayWithObjects:[NSNumber numberWithInt:0], [NSNumber numberWithInt:0], nil], @"NSWritingDirection", //for auto-LTR-RTL text
 		noteBodyAttributes = attrs;
+	}else {
+		//NSLog(@"notebody att4");
+		NSMutableDictionary *attrs = [[NSMutableDictionary dictionaryWithObjectsAndKeys:bodyFont, NSFontAttributeName, nil] retain];
+		NSColor *fgColor = [[NSApp delegate] foregrndColor];
+		
+		//	if (!ColorsEqualWith8BitChannels([NSColor blackColor], fgColor)) {
+		//NSLog(@"golly122");
+		[attrs setObject:fgColor forKey:NSForegroundColorAttributeName];
+		noteBodyAttributes = attrs;
+		//	}
 	}
+
 	return noteBodyAttributes;
 }
 
@@ -888,6 +954,39 @@ BOOL ColorsEqualWith8BitChannels(NSColor *c1, NSColor *c2) {
 }
 - (void)synchronize {
     [defaults synchronize];
+}
+
+//elasticthreads' work
+
+- (NSString *)textEditor{
+	NSString *theData = [defaults stringForKey:TextEditor];
+	if (theData){
+		return theData;
+	} else {
+		//[self setTextEditor:@"Default"];
+		//return @"Default";
+		return nil;
+	}
+}
+
+- (void)setTextEditor:(NSString *)inApp{
+	//if (inApp) {
+		[defaults setObject:inApp forKey:TextEditor];
+		[defaults synchronize];
+	//}
+}
+
+- (BOOL)managesTextWidthInWindow{
+	return [defaults boolForKey:KeepsMaxTextWidth];
+}
+
+- (int)maxNoteBodyWidth{	
+	return [defaults integerForKey:NoteBodyMaxWidth];
+}
+
+- (void)setMaxNoteBodyWidth:(int)maxWidth{
+	[defaults setInteger:maxWidth forKey:NoteBodyMaxWidth];
+	[defaults synchronize];
 }
 
 @end

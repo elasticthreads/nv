@@ -1,20 +1,15 @@
 /* AppController */
 
 /*Copyright (c) 2010, Zachary Schneirov. All rights reserved.
-    This file is part of Notational Velocity.
-
-    Notational Velocity is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    Notational Velocity is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Notational Velocity.  If not, see <http://www.gnu.org/licenses/>. */
+  Redistribution and use in source and binary forms, with or without modification, are permitted 
+  provided that the following conditions are met:
+   - Redistributions of source code must retain the above copyright notice, this list of conditions 
+     and the following disclaimer.
+   - Redistributions in binary form must reproduce the above copyright notice, this list of 
+	 conditions and the following disclaimer in the documentation and/or other materials provided with
+     the distribution.
+   - Neither the name of Notational Velocity nor the names of its contributors may be used to endorse 
+     or promote products derived from this software without specific prior written permission. */
 
 
 #import <Cocoa/Cocoa.h>
@@ -33,15 +28,52 @@
 @class RBSplitSubview;
 @class TitlebarButton;
 @class LinearDividerShader;
+@class TagEditingManager;
+@class StatusItemView;
+@class DFView;
+@class PreviewController;
+@class WordCountToken;
+@class AugmentedScrollView;
+@class ETContentView;
+
+#ifndef MarkdownPreview
+#define MarkdownPreview 13371
+#endif
+
+#ifndef MultiMarkdownPreview
+#define MultiMarkdownPreview 13372
+#endif
+
+#ifndef TextilePreview
+#define TextilePreview 13373
+#endif
 
 @interface AppController : NSObject 
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_6
 <NSToolbarDelegate, NSTableViewDelegate, NSWindowDelegate, NSTextFieldDelegate, NSTextViewDelegate>
 #endif
 {
+	//NSMenuItem *fsMenuItem;
+	BOOL wasVert;
+    ETContentView *mainView;
+	DFView *dualFieldView;
+	StatusItemView *cView;
+    NSStatusItem *statusItem;
+	TagEditingManager *TagEditer;
+	NSColor *backgrndColor;
+	NSColor *foregrndColor;
+	int userScheme;
+	NSString *noteFormat;
+	
+	NSTimer *modifierTimer;
+	IBOutlet WordCountToken *wordCounter;
+	IBOutlet NSMenu *statBarMenu;
     IBOutlet DualField *field;
-	IBOutlet RBSplitSubview *splitSubview;
-	IBOutlet RBSplitView *splitView;
+	RBSplitSubview *splitSubview;
+	RBSplitSubview *notesSubview;
+	RBSplitView *splitView;
+    IBOutlet AugmentedScrollView *notesScrollView;
+    IBOutlet NSScrollView *textScrollView;
     IBOutlet NotesTableView *notesTableView;
     IBOutlet LinkingEditor *textView;
 	IBOutlet EmptyView *editorStatusView;
@@ -71,9 +103,17 @@
 	BOOL isFilteringFromTyping, typedStringIsCached;
 	BOOL isCreatingANote;
 	NSString *typedString;
+	NSArray *cTags;
 	
 	NoteObject *currentNote;
 	NSArray *savedSelectedNotes;
+	
+    PreviewController *previewController;
+   // IBOutlet NSMenuItem *markdownPreview;
+    IBOutlet NSMenuItem *multiMarkdownPreview;
+    IBOutlet NSMenuItem *textilePreview;
+    IBOutlet NSMenuItem *previewToggler;
+    NSInteger currentPreviewMode;
 }
 
 void outletObjectAwoke(id sender);
@@ -126,5 +166,42 @@ void outletObjectAwoke(id sender);
 - (IBAction)toggleNVActivation:(id)sender;
 - (IBAction)bringFocusToControlField:(id)sender;
 - (NSWindow*)window;
+
+//elasticwork
+//- (void)focusOnCtrlFld:(id)sender;
+- (void)drawNotesTable;
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex;
+- (NSMenu *)statBarMenu;
+- (BOOL)toggleAttachedWindow:(id)sender;
+- (BOOL)toggleAttachedMenu:(id)sender;
+- (NSArray *)commonLabels;
+- (IBAction)multiTag:(id)sender;
+- (void)setDualFieldInToolbar;
+- (void)setDualFieldInView;
+- (void)hideDualFieldView;
+- (void)showDualFieldView;
+- (BOOL)dualFieldIsVisible;
+- (IBAction)toggleCollapse:(id)sender;
+- (void)setMaxNoteBodyWidth;
+- (IBAction)toggleFullscreen:(id)sender;
+- (IBAction)openFileInEditor:(id)sender;
+- (NSArray *)getTxtAppList;
+- (void)updateTextApp:(id)sender;
+- (IBAction)setBWColorScheme:(id)sender;
+- (IBAction)setLCColorScheme:(id)sender;
+- (IBAction)setUserColorScheme:(id)sender;
+- (void)updateColorScheme;
+- (void)setBackgrndColor:(NSColor *)inColor;
+- (void)setForegrndColor:(NSColor *)inColor;
+- (NSColor *)backgrndColor;
+- (NSColor *)foregrndColor;
+- (void)updateWordCount;
+- (IBAction)toggleWordCount:(id)sender;
+- (IBAction)togglePreview:(id)sender;
+- (IBAction)toggleSourceView:(id)sender;
+- (IBAction)savePreview:(id)sender;
+- (IBAction)sharePreview:(id)sender;
+- (void)postTextUpdate;
+- (IBAction)selectPreviewMode:(id)sender;
 
 @end

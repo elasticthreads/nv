@@ -61,7 +61,7 @@ static id _sharedKeyComboPanel = nil;
     
 
 	if( mTitleField )
-		[mTitleField setStringValue: mTitleFormat];
+		[mTitleField setStringValue: [NSString stringWithFormat: mTitleFormat, mKeyName]];
      
 }
 
