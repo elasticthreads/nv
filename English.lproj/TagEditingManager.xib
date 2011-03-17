@@ -345,15 +345,14 @@
 						<string key="editorStatusView">EmptyView</string>
 						<string key="field">DualField</string>
 						<string key="multiMarkdownPreview">NSMenuItem</string>
-						<string key="notesSubview">RBSplitSubview</string>
+						<string key="notesScrollView">AugmentedScrollView</string>
 						<string key="notesTableView">NotesTableView</string>
 						<string key="previewToggler">NSMenuItem</string>
 						<string key="sparkleUpdateItem">NSMenuItem</string>
-						<string key="splitSubview">RBSplitSubview</string>
-						<string key="splitView">RBSplitView</string>
 						<string key="statBarMenu">NSMenu</string>
 						<string key="syncWaitPanel">NSPanel</string>
 						<string key="syncWaitSpinner">NSProgressIndicator</string>
+						<string key="textScrollView">NSScrollView</string>
 						<string key="textView">LinkingEditor</string>
 						<string key="textilePreview">NSMenuItem</string>
 						<string key="window">NSWindow</string>
@@ -372,9 +371,9 @@
 							<string key="name">multiMarkdownPreview</string>
 							<string key="candidateClassName">NSMenuItem</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="notesSubview">
-							<string key="name">notesSubview</string>
-							<string key="candidateClassName">RBSplitSubview</string>
+						<object class="IBToOneOutletInfo" key="notesScrollView">
+							<string key="name">notesScrollView</string>
+							<string key="candidateClassName">AugmentedScrollView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="notesTableView">
 							<string key="name">notesTableView</string>
@@ -388,14 +387,6 @@
 							<string key="name">sparkleUpdateItem</string>
 							<string key="candidateClassName">NSMenuItem</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="splitSubview">
-							<string key="name">splitSubview</string>
-							<string key="candidateClassName">RBSplitSubview</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="splitView">
-							<string key="name">splitView</string>
-							<string key="candidateClassName">RBSplitView</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="statBarMenu">
 							<string key="name">statBarMenu</string>
 							<string key="candidateClassName">NSMenu</string>
@@ -407,6 +398,10 @@
 						<object class="IBToOneOutletInfo" key="syncWaitSpinner">
 							<string key="name">syncWaitSpinner</string>
 							<string key="candidateClassName">NSProgressIndicator</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="textScrollView">
+							<string key="name">textScrollView</string>
+							<string key="candidateClassName">NSScrollView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="textView">
 							<string key="name">textView</string>
@@ -428,6 +423,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/AppController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">AugmentedScrollView</string>
+					<string key="superclassName">NSScrollView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/AugmentedScrollView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -553,33 +556,6 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/NotesTableView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">RBSplitSubview</string>
-					<string key="superclassName">NSView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/RBSplitSubview.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">RBSplitView</string>
-					<string key="superclassName">RBSplitSubview</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">delegate</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">delegate</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
-							<string key="name">delegate</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/RBSplitView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

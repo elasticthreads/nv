@@ -175,7 +175,7 @@
 		5CA1100A131C2A7600DE1F91 /* readability.py in Resources */ = {isa = PBXBuildFile; fileRef = 5CA11001131C2A7600DE1F91 /* readability.py */; };
 		5CA1100B131C2A7600DE1F91 /* url_helpers.py in Resources */ = {isa = PBXBuildFile; fileRef = 5CA11002131C2A7600DE1F91 /* url_helpers.py */; };
 		5CA1100C131C2A7600DE1F91 /* url_helpers.pyc in Resources */ = {isa = PBXBuildFile; fileRef = 5CA11003131C2A7600DE1F91 /* url_helpers.pyc */; };
-		5CBA7A911305E2DF004ADEBB /* TagEditingManager.nib in Resources */ = {isa = PBXBuildFile; fileRef = 5CBA7A8F1305E2DF004ADEBB /* TagEditingManager.nib */; };
+		5CBA7A911305E2DF004ADEBB /* TagEditingManager.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5CBA7A8F1305E2DF004ADEBB /* TagEditingManager.xib */; };
 		5CBA7A981305E38C004ADEBB /* TagEditingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CBA7A971305E38C004ADEBB /* TagEditingManager.m */; };
 		5CC2DF0B13083BCF006772D9 /* StatusItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC2DF0A13083BCF006772D9 /* StatusItemView.m */; };
 		5CCEEF1D130B599B00E15B77 /* DFView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CCEEF1C130B599B00E15B77 /* DFView.m */; };
@@ -604,7 +604,7 @@
 		5CA11001131C2A7600DE1F91 /* readability.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = readability.py; sourceTree = "<group>"; };
 		5CA11002131C2A7600DE1F91 /* url_helpers.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = url_helpers.py; sourceTree = "<group>"; };
 		5CA11003131C2A7600DE1F91 /* url_helpers.pyc */ = {isa = PBXFileReference; lastKnownFileType = file; path = url_helpers.pyc; sourceTree = "<group>"; };
-		5CBA7A901305E2DF004ADEBB /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/TagEditingManager.nib; sourceTree = "<group>"; };
+		5CBA7A901305E2DF004ADEBB /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/TagEditingManager.xib; sourceTree = "<group>"; };
 		5CBA7A961305E38C004ADEBB /* TagEditingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagEditingManager.h; sourceTree = "<group>"; };
 		5CBA7A971305E38C004ADEBB /* TagEditingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagEditingManager.m; sourceTree = "<group>"; };
 		5CBD88F0132A84E000FC5A79 /* ETTransparentButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETTransparentButtonCell.h; sourceTree = "<group>"; };
@@ -648,7 +648,6 @@
 		5CF96C26132EA1880079B3FD /* fr */ = {isa = PBXFileReference; lastKnownFileType = text; name = fr; path = "fr.lproj/Raccourcis incroyablement utiles.nvhelp"; sourceTree = "<group>"; };
 		5CF96C3F132EA1890079B3FD /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = fr.lproj/SavedSearches.nib; sourceTree = "<group>"; };
 		5CF96C40132EA1890079B3FD /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/ServicesMenu.strings; sourceTree = "<group>"; };
-		5CF96C41132EA1890079B3FD /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = fr.lproj/TagEditingManager.nib; sourceTree = "<group>"; };
 		5CF96C42132EA1890079B3FD /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = fr.lproj/URLGetter.nib; sourceTree = "<group>"; };
 		5CF96CBE132EA1970079B3FD /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = de.lproj/BlorPasswordRetriever.nib; sourceTree = "<group>"; };
 		5CF96CBF132EA1970079B3FD /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = de; path = de.lproj/CarbonErrorStrings.plist; sourceTree = "<group>"; };
@@ -671,7 +670,6 @@
 		5CF96CD5132EA1970079B3FD /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = de.lproj/PTKeyComboPanel.nib; sourceTree = "<group>"; };
 		5CF96CD6132EA1970079B3FD /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = de.lproj/SavedSearches.nib; sourceTree = "<group>"; };
 		5CF96CD7132EA1970079B3FD /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/ServicesMenu.strings; sourceTree = "<group>"; };
-		5CF96CD8132EA1970079B3FD /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = de.lproj/TagEditingManager.nib; sourceTree = "<group>"; };
 		5CF96CD9132EA1970079B3FD /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = de.lproj/URLGetter.nib; sourceTree = "<group>"; };
 		5CF96CDB132EA1970079B3FD /* de */ = {isa = PBXFileReference; lastKnownFileType = text; name = de; path = "de.lproj/Wie funktioniert dieses Programm?.nvhelp"; sourceTree = "<group>"; };
 		5CF96D57132EA29D0079B3FD /* pt */ = {isa = PBXFileReference; lastKnownFileType = text; name = pt; path = "pt.lproj/Atalhos Incrivelmente Úteis.nvhelp"; sourceTree = "<group>"; };
@@ -695,8 +693,10 @@
 		5CF96D84132EA29D0079B3FD /* pt */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt; path = pt.lproj/Preferences.nib; sourceTree = "<group>"; };
 		5CF96D87132EA29D0079B3FD /* pt */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt; path = pt.lproj/PTKeyComboPanel.nib; sourceTree = "<group>"; };
 		5CF96D8A132EA29D0079B3FD /* pt */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt; path = pt.lproj/SavedSearches.nib; sourceTree = "<group>"; };
-		5CF96D8D132EA29D0079B3FD /* pt */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt; path = pt.lproj/TagEditingManager.nib; sourceTree = "<group>"; };
 		5CF96D90132EA29D0079B3FD /* pt */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt; path = pt.lproj/URLGetter.nib; sourceTree = "<group>"; };
+		5CFC3A4E13327EF9000B4792 /* de */ = {isa = PBXFileReference; lastKnownFileType = file; name = de; path = de.lproj/TagEditingManager.xib; sourceTree = "<group>"; };
+		5CFC3A4F13327EF9000B4792 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file; name = fr; path = fr.lproj/TagEditingManager.xib; sourceTree = "<group>"; };
+		5CFC3A5013327EF9000B4792 /* pt */ = {isa = PBXFileReference; lastKnownFileType = file; name = pt; path = pt.lproj/TagEditingManager.xib; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Notational Velocity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Notational Velocity.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3EEC9FE106F66C70023D7F8 /* NVPasswordGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPasswordGenerator.m; sourceTree = "<group>"; };
@@ -1157,7 +1157,7 @@
 				5CF96BFD132EA0300079B3FD /* MainMenu.xib */,
 				5C1830CC132EA675005E2210 /* MarkupPreview.xib */,
 				5C1830CF132EA687005E2210 /* SaveHTMLPreview.nib */,
-				5CBA7A8F1305E2DF004ADEBB /* TagEditingManager.nib */,
+				5CBA7A8F1305E2DF004ADEBB /* TagEditingManager.xib */,
 				212DCFF50A6E005000F74E46 /* DeletionManager.nib */,
 				212DCB2F0A6AE38500F74E46 /* EncodingsManager.nib */,
 				219195E409D3A20F00586B15 /* Preferences.nib */,
@@ -1335,7 +1335,7 @@
 				216D9C2E12CFEF2A0004B9CE /* LinkBackPressed.tif in Resources */,
 				21C3DBF412D23C83002F707A /* Notality.icns in Resources */,
 				21A38EE412EA864400CEB5F0 /* MakeDefault_Pressed.tiff in Resources */,
-				5CBA7A911305E2DF004ADEBB /* TagEditingManager.nib in Resources */,
+				5CBA7A911305E2DF004ADEBB /* TagEditingManager.xib in Resources */,
 				5C4B353E1307220E00014119 /* TransparentScrollerKnobTop.tif in Resources */,
 				5C4B35401307220E00014119 /* TransparentScrollerSlotBottom.tif in Resources */,
 				5C4B35421307220E00014119 /* TransparentScrollerSlotVerticalFill.tif in Resources */,
@@ -1805,15 +1805,15 @@
 			name = SaveHTMLPreview.nib;
 			sourceTree = "<group>";
 		};
-		5CBA7A8F1305E2DF004ADEBB /* TagEditingManager.nib */ = {
+		5CBA7A8F1305E2DF004ADEBB /* TagEditingManager.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				5CBA7A901305E2DF004ADEBB /* English */,
-				5CF96C41132EA1890079B3FD /* fr */,
-				5CF96CD8132EA1970079B3FD /* de */,
-				5CF96D8D132EA29D0079B3FD /* pt */,
+				5CFC3A4E13327EF9000B4792 /* de */,
+				5CFC3A4F13327EF9000B4792 /* fr */,
+				5CFC3A5013327EF9000B4792 /* pt */,
 			);
-			name = TagEditingManager.nib;
+			name = TagEditingManager.xib;
 			sourceTree = "<group>";
 		};
 		5CF96BFD132EA0300079B3FD /* MainMenu.xib */ = {
