@@ -136,6 +136,14 @@
 		5C4B35421307220E00014119 /* TransparentScrollerSlotVerticalFill.tif in Resources */ = {isa = PBXBuildFile; fileRef = 5C4B353A1307220E00014119 /* TransparentScrollerSlotVerticalFill.tif */; };
 		5C4B35441307220E00014119 /* nvMenuDark.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C4B353C1307220E00014119 /* nvMenuDark.png */; };
 		5C4B356A1307225000014119 /* ETTransparentScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B35691307225000014119 /* ETTransparentScroller.m */; };
+		5C671531133294F30020CCBC /* Atalhos Incrivelmente Úteis.nvhelp in Resources */ = {isa = PBXBuildFile; fileRef = 5CF96D56132EA29D0079B3FD /* Atalhos Incrivelmente Úteis.nvhelp */; };
+		5C671532133294F30020CCBC /* Como funciona isso?.nvhelp in Resources */ = {isa = PBXBuildFile; fileRef = 5CF96D5C132EA29D0079B3FD /* Como funciona isso?.nvhelp */; };
+		5C671533133294F30020CCBC /* Este é o título de uma nota.nvhelp in Resources */ = {isa = PBXBuildFile; fileRef = 5CF96D64132EA29D0079B3FD /* Este é o título de uma nota.nvhelp */; };
+		5C671534133294F30020CCBC /* Informações de Contato.nvhelp in Resources */ = {isa = PBXBuildFile; fileRef = 5CF96D6F132EA29D0079B3FD /* Informações de Contato.nvhelp */; };
+		5C671539133295280020CCBC /* Atalhos Incrivelmente Úteis.nvhelp in Resources */ = {isa = PBXBuildFile; fileRef = 5CF96D56132EA29D0079B3FD /* Atalhos Incrivelmente Úteis.nvhelp */; };
+		5C67153A133295280020CCBC /* Como funciona isso?.nvhelp in Resources */ = {isa = PBXBuildFile; fileRef = 5CF96D5C132EA29D0079B3FD /* Como funciona isso?.nvhelp */; };
+		5C67153B133295280020CCBC /* Este é o título de uma nota.nvhelp in Resources */ = {isa = PBXBuildFile; fileRef = 5CF96D64132EA29D0079B3FD /* Este é o título de uma nota.nvhelp */; };
+		5C67153C133295280020CCBC /* Informações de Contato.nvhelp in Resources */ = {isa = PBXBuildFile; fileRef = 5CF96D6F132EA29D0079B3FD /* Informações de Contato.nvhelp */; };
 		5C94376F132A0C9E00B08B80 /* greyscrollervertbottom3.tif in Resources */ = {isa = PBXBuildFile; fileRef = 5C94376C132A0C9D00B08B80 /* greyscrollervertbottom3.tif */; };
 		5C943771132A0C9E00B08B80 /* greyscrollerverttop3.tif in Resources */ = {isa = PBXBuildFile; fileRef = 5C94376E132A0C9D00B08B80 /* greyscrollerverttop3.tif */; };
 		5C96F4FF131C2F9500A2E4AC /* TabClose_Front_Pressed.tif in Resources */ = {isa = PBXBuildFile; fileRef = 5C96F4FC131C2F9500A2E4AC /* TabClose_Front_Pressed.tif */; };
@@ -1429,6 +1437,14 @@
 				5CF96E0A132EA29D0079B3FD /* EncodingsManager.nib in Resources */,
 				5CF96E0B132EA29D0079B3FD /* Preferences.xib in Resources */,
 				5CF96E0C132EA29D0079B3FD /* NotationPrefsView.nib in Resources */,
+				5C671531133294F30020CCBC /* Atalhos Incrivelmente Úteis.nvhelp in Resources */,
+				5C671532133294F30020CCBC /* Como funciona isso?.nvhelp in Resources */,
+				5C671533133294F30020CCBC /* Este é o título de uma nota.nvhelp in Resources */,
+				5C671534133294F30020CCBC /* Informações de Contato.nvhelp in Resources */,
+				5C671539133295280020CCBC /* Atalhos Incrivelmente Úteis.nvhelp in Resources */,
+				5C67153A133295280020CCBC /* Como funciona isso?.nvhelp in Resources */,
+				5C67153B133295280020CCBC /* Este é o título de uma nota.nvhelp in Resources */,
+				5C67153C133295280020CCBC /* Informações de Contato.nvhelp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
