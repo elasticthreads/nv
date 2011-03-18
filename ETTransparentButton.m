@@ -1,4 +1,5 @@
 //
+//  ETTransparentButton based on
 //  BWTransparentButton.m
 //  BWToolkit
 //

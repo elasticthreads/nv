@@ -1,5 +1,6 @@
 //
-//  BWTransparentButton.h
+//  ETTransparentButton based on
+//  BWTransparentButton.m
 //  BWToolkit
 //
 //  Created by Brandon Walkin (www.brandonwalkin.com)

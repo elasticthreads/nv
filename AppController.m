@@ -676,7 +676,7 @@ terminateApp:
 		[splitView setVertical:horiz];
 		[splitView setDividerThickness:7.0f];	
         NSSize size = [notesSubview frame].size;        
-          [[notesTableView enclosingScrollView] setFrame: horiz ? NSMakeRect(0, 0, size.width, size.height - 1) : NSMakeRect(0, 0, size.width, size.height + 1)];
+        [[notesTableView enclosingScrollView] setFrame: NSMakeRect(0, 0, size.width, size.height + 1)];
 		[notesSubview collapse];
 	}else {
         [splitView setVertical:horiz];
@@ -684,18 +684,14 @@ terminateApp:
         [splitView setDivider: verticalDividerImg];
         [splitView setDividerThickness: horiz ? 10.0 : 9.0];		
         NSSize size = [notesSubview frame].size;        
-        [[notesTableView enclosingScrollView] setFrame: horiz ? NSMakeRect(0, 0, size.width, size.height - 1) : NSMakeRect(0, 0, size.width, size.height + 1)];
+        [[notesTableView enclosingScrollView] setFrame: NSMakeRect(0, 0, size.width, size.height + 1)];
 	}
 	
 	[[notesTableView enclosingScrollView] setBorderType:NSNoBorder];
 	[[textView enclosingScrollView] setBorderType:NSNoBorder];
-	//[[notesTableView enclosingScrollView] setBorderType:horiz ? NSNoBorder : NSBezelBorder];
-	//[[textView enclosingScrollView] setBorderType:horiz ? NSNoBorder : NSBezelBorder];
-	//[[splitView subviewAtPosition:0] setMinDimension:horiz ? 100.0 : 0.0 andMaxDimension:0.0];
     if (horiz) {
         [splitSubview setMinDimension:100.0 andMaxDimension:0.0];
     }
-	
 }
 
 - (IBAction)switchViewLayout:(id)sender {	
