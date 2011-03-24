@@ -21,7 +21,7 @@
 	BOOL disableUpdating;
 	#endif
 	//NSColor *scrollBackgroundColor;
-	BOOL lionStyle;
+	//BOOL lionStyle;
 }
 #if DELAYED_LAYOUT
 - (void)setDisableUpdating:(BOOL)disable;
@@ -33,7 +33,7 @@
 - (id)contentViewDelegate;
 
 #endif
-- (void)setLionStyle:(BOOL)isLion;
+//- (void)setLionStyle:(BOOL)isLion;
 //- (void)setBackgroundColor:(NSColor *)inColor;
 
 @end

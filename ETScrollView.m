@@ -6,7 +6,7 @@
 //
 
 #import "ETScrollView.h"
-
+#import "ETTransparentScroller.h"
 
 @implementation ETScrollView
 
@@ -36,11 +36,26 @@
 /*
 - (void)awakeFromNib{
     // NSLog(@"etawake");
-   [self setDrawsBackground:NO];
+  // [self setDrawsBackground:NO];
+    
+    
+	
+	//nvTextScroller = [[[ETTransparentScroller alloc]init] retain];
+	//[[self enclosingScrollView] setVerticalScroller:nvTextScroller];
+    
+	//[[self enclosingScrollView] setAutohidesScrollers:YES];
+	//[nvTextScroller setLionStyle:NO];
+	//[[self enclosingScrollView] setDrawsBackground:NO];
+    @try {
+        [[self verticalScroller] setLionStyle:NO];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"setting lionstyle except:%@",[exception description]);
+    }
    // [self setHasHorizontalScroller:YES];
    // [self setBackgroundColor:[NSColor redColor]];
-}
-
+}*/
+/*
 - (void)drawRect:(NSRect)rect{
     [super drawRect:rect];
    // rect = [self frame];

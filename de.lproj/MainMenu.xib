@@ -68,7 +68,6 @@
 					<string key="NSFrame">{{7, 11}, {397, 464}}</string>
 					<reference key="NSSuperview"/>
 					<reference key="NSWindow"/>
-					<reference key="NSNextKeyView"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
 				<string key="NSMinSize">{213, 129}</string>
@@ -1834,7 +1833,7 @@
 								<string key="NSFrameSize">{399, 136}</string>
 								<reference key="NSSuperview" ref="798972545"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="505180694"/>
+								<reference key="NSNextKeyView" ref="620964115"/>
 								<bool key="NSEnabled">YES</bool>
 								<object class="NSTableHeaderView" key="NSHeaderView" id="598847571">
 									<reference key="NSNextResponder" ref="285501746"/>
@@ -1897,7 +1896,6 @@
 						<string key="NSFrame">{{383, 17}, {15, 135}}</string>
 						<reference key="NSSuperview" ref="455555629"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<reference key="NSTarget" ref="455555629"/>
 						<string key="NSAction">_doScroller:</string>
 						<double key="NSPercent">0.99259259259259258</double>
@@ -1934,7 +1932,7 @@
 				<string key="NSFrameSize">{399, 153}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="620964115"/>
+				<reference key="NSNextKeyView" ref="798972545"/>
 				<int key="NSsFlags">528</int>
 				<reference key="NSVScroller" ref="505180694"/>
 				<reference key="NSHScroller" ref="620964115"/>
@@ -1982,7 +1980,7 @@
 								<string key="NSFrameSize">{399, 14}</string>
 								<reference key="NSSuperview" ref="1032425933"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="829414797"/>
+								<reference key="NSNextKeyView" ref="315518795"/>
 								<object class="NSTextContainer" key="NSTextContainer" id="288937214">
 									<object class="NSLayoutManager" key="NSLayoutManager">
 										<object class="NSTextStorage" key="NSTextStorage">
@@ -2065,7 +2063,6 @@
 							<string key="NSHotSpot">{4, -5}</string>
 							<int key="NSCursorType">1</int>
 						</object>
-						<int key="NScvFlags">2</int>
 					</object>
 					<object class="NSScroller" id="829414797">
 						<reference key="NSNextResponder" ref="635102632"/>
@@ -2073,7 +2070,6 @@
 						<string key="NSFrame">{{383, 1}, {15, 288}}</string>
 						<reference key="NSSuperview" ref="635102632"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<reference key="NSTarget" ref="635102632"/>
 						<string key="NSAction">_doScroller:</string>
 						<double key="NSCurValue">1</double>
@@ -2095,7 +2091,7 @@
 				<string key="NSFrameSize">{399, 304}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="315518795"/>
+				<reference key="NSNextKeyView" ref="1032425933"/>
 				<int key="NSsFlags">528</int>
 				<reference key="NSVScroller" ref="829414797"/>
 				<reference key="NSHScroller" ref="315518795"/>
@@ -4287,6 +4283,7 @@
 							<reference ref="333194602"/>
 						</object>
 						<reference key="parent" ref="0"/>
+						<string key="objectName">Scroll View - Linking Editor</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1228</int>

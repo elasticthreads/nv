@@ -51,11 +51,11 @@ static float minKnobHeight;
 	}
 	return self;
 }
-
+/*
 - (void)awakeFromNib{
-	lionStyle = YES;	
+	//lionStyle = YES;	
 	//scrollBackgroundColor = [[NSColor colorWithCalibratedRed:0.948f green:0.948f blue:0.948f alpha:1.0f]retain];
-}
+}*/
 
 + (CGFloat)scrollerWidth
 {
@@ -75,19 +75,22 @@ static float minKnobHeight;
 	scrollBackgroundColor = inColor;
 	[scrollBackgroundColor retain];
 	//[[self enclosingScrollView] setNeedsDisplay:YES];
-}*/
+}
 
 - (void)setLionStyle:(BOOL)isLion{
+    NSLog(@"setting lionstyle: %d",isLion);
 	lionStyle = isLion;
-}
+}*/
 
 - (void)drawRect:(NSRect)aRect;
 {
-	if (!lionStyle) {
-        //NSDrawWindowBackground([self bounds]);
-        [[[[self window] contentView] backgroundColor] setFill];
-        NSRectFill([self bounds]);
-	}  
+    
+    if ([[[self superview] className] isEqualToString:@"ETScrollView"]) {
+       // NSLog(@"notlion");
+        NSDrawWindowBackground([self bounds]);
+   //     [[[[self window] contentView] backgroundColor] setFill];
+     //   NSRectFill([self bounds]);
+	}
 	//NSRectFillUsingOperation(aRect,NSCompositeSourceOut);//([self bounds]);
 	// Only draw if the slot is larger than the knob
 	if (([self bounds].size.height - verticalPaddingTop - verticalPaddingBottom + 1) > minKnobHeight)

@@ -1934,7 +1934,6 @@
 							<string key="NSHotSpot">{4, -5}</string>
 							<int key="NSCursorType">1</int>
 						</object>
-						<int key="NScvFlags">2</int>
 					</object>
 					<object class="NSScroller" id="71696990">
 						<reference key="NSNextResponder" ref="453817460"/>
@@ -4248,6 +4247,7 @@
 							<reference ref="273782792"/>
 						</object>
 						<reference key="parent" ref="0"/>
+						<string key="objectName">Scroll View - Linking Editor</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1220</int>
@@ -4275,6 +4275,7 @@
 							<reference ref="809404436"/>
 						</object>
 						<reference key="parent" ref="0"/>
+						<string key="objectName">Augmented Scroll View - Notes Table View</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1225</int>

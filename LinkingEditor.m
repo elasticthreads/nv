@@ -9,7 +9,7 @@
    - Neither the name of Notational Velocity nor the names of its contributors may be used to endorse 
      or promote products derived from this software without specific prior written permission. */
 
-#import "ETTransparentScroller.h"
+//#import "ETTransparentScroller.h"
 #import "LinkingEditor.h"
 #import "GlobalPrefs.h"
 #import "AppController.h"
@@ -79,15 +79,8 @@ CGFloat _perceptualDarkness(NSColor*a);
 	[self setUsesRuler:NO];
 	[self setUsesFontPanel:NO];
 	[self setDrawsBackground:NO];
-	
-	//nvTextScroller = [[[ETTransparentScroller alloc]init] retain];
-	//[[self enclosingScrollView] setVerticalScroller:nvTextScroller];
     
-	//[[self enclosingScrollView] setAutohidesScrollers:YES];
-	//[nvTextScroller setLionStyle:NO];
-    [[[self enclosingScrollView] verticalScroller] setLionStyle:NO];
 	[self updateTextColors];
-	[[self enclosingScrollView] setDrawsBackground:NO];
 	[[self window] setAcceptsMouseMovedEvents:YES];
 	if (IsLeopardOrLater) {
 		defaultIBeamCursorIMP = method_getImplementation(class_getClassMethod([NSCursor class], @selector(IBeamCursor)));

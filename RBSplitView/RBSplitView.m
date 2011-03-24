@@ -537,7 +537,6 @@ static inline CGFloat fMAX(CGFloat a,CGFloat b) {
 
 // This keeps the isInScrollView flag up-to-date.
 - (void)viewDidMoveToSuperview {
-  //  NSLog(@"uhoh1");
 	[super viewDidMoveToSuperview];
 	NSScrollView* scrollv = [self enclosingScrollView];
 	isInScrollView = scrollv?[scrollv documentView]==self:NO;
@@ -1096,7 +1095,7 @@ static inline CGFloat fMAX(CGFloat a,CGFloat b) {
 		document = [[self enclosingScrollView] documentView];
 		if (document) {
             
-            NSLog(@"uhoh2");
+            //NSLog(@"uhoh2");
 			frame = [document frame];
 		} else {
 			window = [self window];
@@ -1168,7 +1167,7 @@ static inline CGFloat fMAX(CGFloat a,CGFloat b) {
 		document = [[self enclosingScrollView] documentView];
 		if (document) {
             
-            NSLog(@"uhoh3");
+          //  NSLog(@"uhoh3");
 			frame = [document frame];
 		} else {
 			window = [self window];
@@ -1232,7 +1231,7 @@ static inline CGFloat fMAX(CGFloat a,CGFloat b) {
 		document = [[self enclosingScrollView] documentView];
 		if (document) {
             
-            NSLog(@"uhoh4");
+         ///   NSLog(@"uhoh4");
 			frame = [document frame];
 		} else {
 			window = [self window];
