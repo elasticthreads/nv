@@ -46,6 +46,7 @@
 
 - (void)updateWidthForHighlight {
 	[self setMinWidth:absoluteMinimumWidth + ([[self tableView] highlightedTableColumn] == self ? 10 : 0)];
+  
 }
 
 SEL columnAttributeMutator(NoteAttributeColumn *col) {

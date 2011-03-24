@@ -8,7 +8,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "LinkingEditor.h"
+//#import "LinkingEditor.h"
 
 
 
@@ -34,7 +34,7 @@
 
 #endif
 - (void)setLionStyle:(BOOL)isLion;
-- (void)setBackgroundColor:(NSColor *)inColor;
+//- (void)setBackgroundColor:(NSColor *)inColor;
 
 @end
 

@@ -7,7 +7,7 @@
 
 #import "WordCountToken.h"
 #import "AppController.h"
-#import <QuartzCore/QuartzCore.h>
+//#import <QuartzCore/QuartzCore.h>
 
 @implementation WordCountToken
 
@@ -27,10 +27,14 @@
 	
 }
 
+- (void)mouseDown:(NSEvent *)theEvent{
+	[[NSApp delegate] toggleWordCount:self];
+}
+/*
 - (void)drawRect:(NSRect)dirtyRect {
 	[super drawRect:dirtyRect];
 	
-	/*
+	
 	//[self resetCursorRects];
 	//[[NSColor whiteColor] set];
 	//NSRectFill([self bounds]);
@@ -74,9 +78,9 @@
 	thePoint.x +=  (aRect.size.width - labelRect.size.width)/2.0f;
 	thePoint.x -= 1.0f;
 	[text drawAtPoint:thePoint withAttributes:options];
-	*/
+	
 }
-
+*/
 
 /*
 - (void)setTxtColor:(NSColor *)inColor{
@@ -124,9 +128,6 @@
 	[fldColor retain];
 }*/
 
-- (void)mouseDown:(NSEvent *)theEvent{
-	[[NSApp delegate] toggleWordCount:self];
-}
 /*
 -(void)resetCursorRects
 {

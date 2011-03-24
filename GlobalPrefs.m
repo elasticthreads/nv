@@ -15,6 +15,9 @@
    - Neither the name of Notational Velocity nor the names of its contributors may be used to endorse 
      or promote products derived from this software without specific prior written permission. */
 
+/*[NSArchiver archivedDataWithRootObject:[NSColor colorWithCalibratedRed:0.74f green:0.74f blue:0.74f alpha:1.0f]], ForegroundTextColorKey,
+ [NSArchiver archivedDataWithRootObject:[NSColor colorWithCalibratedRed:0.082f green:0.082f blue:0.082f alpha:1.0f]], BackgroundTextColorKey,*/
+
 #import "AppController.h"
 #import "GlobalPrefs.h"
 #import "NSData_transformations.h"
@@ -75,6 +78,7 @@ static NSString *UseMarkdownImportKey = @"UseMarkdownImport";
 static NSString *UseReadabilityKey = @"UseReadability";
 static NSString *RTLKey = @"rtl";
 static NSString *ShowWordCount = @"ShowWordCount";
+static NSString *markupPreviewMode = @"markupPreviewMode";
 //static NSString *PasteClipboardOnNewNoteKey = @"PasteClipboardOnNewNote";
 
 //these 4 strings manually localized
@@ -135,19 +139,19 @@ static void sendCallbacksForGlobalPrefs(GlobalPrefs* self, SEL selector, id orig
 			[NSNumber numberWithBool:NO], StatusBarItem, 
 			[NSNumber numberWithBool:NO], KeepsMaxTextWidth,
 			[NSNumber numberWithInt:600], NoteBodyMaxWidth,
-			[NSNumber numberWithInt:0], ColorScheme,
+			[NSNumber numberWithInt:2], ColorScheme,
 			@"Hide Dock Icon",HideDockIcon,
 			[NSNumber numberWithBool:NO], RTLKey,
-			[NSNumber numberWithBool:YES], ShowWordCount,
+            [NSNumber numberWithBool:YES], ShowWordCount,
+            [NSNumber numberWithInt:MultiMarkdownPreview], markupPreviewMode,
 			[NSNumber numberWithBool:NO], UseMarkdownImportKey,
 			[NSNumber numberWithBool:NO], UseReadabilityKey,
-			//@"Default",TextEditor,
 			
 			[NSArchiver archivedDataWithRootObject:
 			 [NSFont fontWithName:@"Helvetica" size:12.0f]], NoteBodyFontKey,
 			
-			[NSArchiver archivedDataWithRootObject:[NSColor colorWithCalibratedRed:0.74f green:0.74f blue:0.74f alpha:1.0f]], ForegroundTextColorKey,
-			[NSArchiver archivedDataWithRootObject:[NSColor colorWithCalibratedRed:0.082f green:0.082f blue:0.082f alpha:1.0f]], BackgroundTextColorKey,
+			[NSArchiver archivedDataWithRootObject:[NSColor blackColor]], ForegroundTextColorKey,
+			[NSArchiver archivedDataWithRootObject:[NSColor whiteColor]], BackgroundTextColorKey,
 			
 			[NSArchiver archivedDataWithRootObject:
 			 [NSColor colorWithCalibratedRed:0.945 green:0.702 blue:0.702 alpha:1.0f]], SearchTermHighlightColorKey,

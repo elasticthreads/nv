@@ -13,5 +13,6 @@
 }
 
 - (void)setBackgroundColor:(NSColor *)inCol;
+- (NSColor *)backgroundColor;
 
 @end

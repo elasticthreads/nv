@@ -8,6 +8,7 @@
 //
 
 #import "ETTransparentScroller.h"
+#import "ETContentView.h"
 
 static NSImage *knobTop, *knobVerticalFill, *knobBottom, *slotTop, *slotVerticalFill, *slotBottom;
 static float verticalPaddingLeft = 3.1f;
@@ -16,7 +17,7 @@ static float verticalPaddingTop = 2.5f;
 static float verticalPaddingBottom = 2.5f;
 static float minKnobHeight;
 
-static NSColor *scrollBackgroundColor;
+//static NSColor *scrollBackgroundColor;
 
 @interface ETTransparentScroller (NVTSPrivate)
 - (void)drawKnobSlot;
@@ -40,7 +41,7 @@ static NSColor *scrollBackgroundColor;
 	slotBottom			= [[NSImage alloc] initWithContentsOfFile:[bundle pathForImageResource:@"TransparentScrollerSlotBottom.tif"]];
 	
 	//bwBackgroundColor	= [[NSColor colorWithCalibratedWhite:0.13 alpha:0.855] retain];
-	scrollBackgroundColor = [[NSColor colorWithCalibratedRed:0.948f green:0.948f blue:0.948f alpha:1.0f]retain];
+	//scrollBackgroundColor = [[NSColor colorWithCalibratedRed:0.948f green:0.948f blue:0.948f alpha:1.0f]retain];
 	minKnobHeight = knobTop.size.height + knobVerticalFill.size.height + knobBottom.size.height + 10;
 }
 
@@ -65,15 +66,16 @@ static NSColor *scrollBackgroundColor;
 {
 	return slotVerticalFill.size.width + verticalPaddingLeft + verticalPaddingRight;
 }
-
+/*
 - (void)setBackgroundColor:(NSColor *)inColor {	
+    NSLog(@"unnecessary");
     if (scrollBackgroundColor) {
         [scrollBackgroundColor release];
     }
 	scrollBackgroundColor = inColor;
 	[scrollBackgroundColor retain];
 	//[[self enclosingScrollView] setNeedsDisplay:YES];
-}
+}*/
 
 - (void)setLionStyle:(BOOL)isLion{
 	lionStyle = isLion;
@@ -82,7 +84,9 @@ static NSColor *scrollBackgroundColor;
 - (void)drawRect:(NSRect)aRect;
 {
 	if (!lionStyle) {
-        NSDrawWindowBackground([self bounds]);
+        //NSDrawWindowBackground([self bounds]);
+        [[[[self window] contentView] backgroundColor] setFill];
+        NSRectFill([self bounds]);
 	}  
 	//NSRectFillUsingOperation(aRect,NSCompositeSourceOut);//([self bounds]);
 	// Only draw if the slot is larger than the knob
@@ -194,7 +198,6 @@ static NSColor *scrollBackgroundColor;
 
 #if DELAYED_LAYOUT
 - (void)mouseDown:(NSEvent*)event {
-	
 	if (![contentViewDelegate readyToDraw]) {
 		[contentViewDelegate _setFutureSelectionRangeWithinIndex:[[contentViewDelegate string] length]];
 	}

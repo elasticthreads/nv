@@ -80,12 +80,12 @@ CGFloat _perceptualDarkness(NSColor*a);
 	[self setUsesFontPanel:NO];
 	[self setDrawsBackground:NO];
 	
-	nvTextScroller = [[[ETTransparentScroller alloc]init] retain];
-    //[nvTextScroller setControlSize:NSMiniControlSize];
-	[[self enclosingScrollView] setVerticalScroller:nvTextScroller];
+	//nvTextScroller = [[[ETTransparentScroller alloc]init] retain];
+	//[[self enclosingScrollView] setVerticalScroller:nvTextScroller];
     
-	[[self enclosingScrollView] setAutohidesScrollers:YES];
-	[nvTextScroller setLionStyle:NO];
+	//[[self enclosingScrollView] setAutohidesScrollers:YES];
+	//[nvTextScroller setLionStyle:NO];
+    [[[self enclosingScrollView] verticalScroller] setLionStyle:NO];
 	[self updateTextColors];
 	[[self enclosingScrollView] setDrawsBackground:NO];
 	[[self window] setAcceptsMouseMovedEvents:YES];
@@ -186,16 +186,16 @@ CGFloat _perceptualDarkness(NSColor*a);
 }
 
 - (void)setBackgroundColor:(NSColor*)aColor {
-	backgroundIsDark = (_perceptualDarkness([aColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace]) > 0.5);
-	[super setBackgroundColor:aColor];
+//	backgroundIsDark = (_perceptualDarkness([aColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace]) > 0.5);
+//	[super setBackgroundColor:aColor];
 }
 
 - (void)updateTextColors {
 	NSColor *fgColor = [[NSApp delegate] foregrndColor];
 	NSColor *bgColor = [[NSApp delegate] backgrndColor];
-	[self setBackgroundColor:bgColor];
-	[nvTextScroller setBackgroundColor:bgColor];
-	[[self enclosingScrollView] setNeedsDisplay:YES];
+	//[self setBackgroundColor:bgColor];
+	//[nvTextScroller setBackgroundColor:bgColor];
+	//[[self enclosingScrollView] setNeedsDisplay:YES];
 	[self setInsertionPointColor:[self _insertionPointColorForForegroundColor:fgColor backgroundColor:bgColor]];
 	[self setLinkTextAttributes:[self preferredLinkAttributes]];
 	[self setSelectedTextAttributes:[NSDictionary dictionaryWithObject:[self _selectionColorForForegroundColor:fgColor backgroundColor:bgColor] 
@@ -631,6 +631,8 @@ copyRTFType:
 }
 
 - (NSRange)selectionRangeForProposedRange:(NSRange)proposedSelRange granularity:(NSSelectionGranularity)granularity {
+    
+   // [[NSApp delegate] updateWordCount:YES];
 	if (granularity != NSSelectByWord || [[self string] length] == proposedSelRange.location) {
 		// If it's not a double-click return unchanged
 		return [super selectionRangeForProposedRange:proposedSelRange granularity:granularity];
@@ -692,7 +694,8 @@ copyRTFType:
 		}
 		//NSBeep();
 	}
-		
+    
+    
 	// If it has a found a "starting" brace but not found a match, a double-click should only select the "starting" brace and not what it usually would select at a double-click
 	if (triedToMatchBrace) {
 		return [super selectionRangeForProposedRange:NSMakeRange(proposedSelRange.location, 1) granularity:NSSelectByCharacter];
@@ -1005,7 +1008,9 @@ copyRTFType:
 		}
 		[self insertText:insertString];
 	}	
-}*/
+}
+
+*/
 
 - (void)mouseEntered:(NSEvent*)anEvent {
 	mouseInside = YES;
@@ -1440,8 +1445,7 @@ static long (*GetGetScriptManagerVariablePointer())(short) {
 	if(IsLeopardOrLater){
         theMenuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Toggle Fullscreen Mode",@"toggle fs menu item title") action:@selector(toggleFullscreen:) keyEquivalent:@""] autorelease];
         [theMenuItem setTarget:[NSApp delegate]];
-        [theMenu addItem:theMenuItem]; 
-        
+        [theMenu addItem:theMenuItem];         
         [theMenu addItem:[NSMenuItem separatorItem]];
 	}
 	theMenuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Cut",@"cut menu item title") action:@selector(cut:) keyEquivalent:@""] autorelease];
@@ -1566,7 +1570,7 @@ static long (*GetGetScriptManagerVariablePointer())(short) {
 //elasticwork
 - (void)switchFindPanelDelegate{
 	NSTextFinder *textFinder = [NSTextFinder sharedTextFinder];
-	if ([[[self window] className] isEqualToString:@"_NSFullScreenWindow"]) {
+    if ([[[self window] contentView] isInFullScreenMode]) {
 		[[textFinder findPanel:YES] setDelegate:self];
 		NSArray *sViews = [[[textFinder findPanel:YES] contentView] subviews];
 		for (id thing in sViews){
@@ -1616,5 +1620,11 @@ static long (*GetGetScriptManagerVariablePointer())(short) {
 //	[[NSTextFinder sharedTextFinder] setFindString:[[NSTextFinder sharedTextFinder] findString] writeToPasteboard:NO updateUI:YES];
 	[[NSTextFinder sharedTextFinder] performFindPanelAction:findTag forClient:self];
 }
+
+- (void)mouseDown:(NSEvent *)theEvent{
+    [[NSApp delegate] setIsEditing:NO];
+    [super mouseDown:theEvent];
+}
+
 
 @end

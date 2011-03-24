@@ -100,16 +100,20 @@
 
 - (void)tile {
 	[super tile];
-	NSRect vsRect = [[self verticalScroller] frame];
-	NSRect conRect = [[self contentView] frame];
-	NSView *wdContent = [[self contentView] retain];
-	conRect.size.width = conRect.size.width + vsRect.size.width;
-	[wdContent setFrame:conRect];
-	[wdContent release];
-    [[self verticalScroller] setFrame:vsRect];
+    if (![[self verticalScroller] isHidden]) {
+        NSRect vsRect = [[self verticalScroller] frame];
+        NSRect conRect = [[self contentView] frame];
+        NSView *wdContent = [[self contentView] retain];
+        conRect.size.width = conRect.size.width + vsRect.size.width;
+        [wdContent setFrame:conRect];
+        [wdContent release];
+        [[self verticalScroller] setFrame:vsRect];
+        
+    }
 	/*if (showDragSquare) {
 		[self _positionDragSquare];
 	}*/
 }
+
 
 @end

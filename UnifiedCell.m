@@ -40,8 +40,8 @@
 //changes will hereafter affect all field editors for the window; do not want
 - (NSText *)setUpFieldEditorAttributes:(NSText *)textObj {
 	NSTextView *tv = (NSTextView *)[super setUpFieldEditorAttributes:textObj];
-	
-	[tv setTextContainerInset:NSMakeSize(-2,-2)];
+	//NSLog(@"okfield1s");
+	[tv setTextContainerInset:NSMakeSize(-9,-9)];
 	
 	NSTextContainer *tc = [tv textContainer];
 	[tc setContainerSize:NSMakeSize(1.0e7, 1.0e7)];
@@ -171,9 +171,12 @@ NSAttributedString *AttributedStringForSelection(NSAttributedString *str, BOOL w
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {	
-	
 	NotesTableView *tv = (NotesTableView *)controlView;
-	
+    if ([[[tv enclosingScrollView] verticalScroller] isHidden]) {
+        cellFrame.size.width +=1.5f;
+    }else{
+        cellFrame.size.width-=8.25f;    
+    }
 	[super drawWithFrame:cellFrame inView:controlView];	
 	
 	//draw note date and tags
@@ -203,7 +206,7 @@ NSAttributedString *AttributedStringForSelection(NSAttributedString *str, BOOL w
 		}
 		
 		NSString *dateStr = (showDateCreated ? dateCreatedStringOfNote : dateModifiedStringOfNote)(tv, noteObject, NSNotFound);
-		[dateStr drawInRect:NSMakeRect(NSMaxX(cellFrame) - 80.0, NSMinY(cellFrame), 70.0, fontHeight) withAttributes:baseAttrs];
+		[dateStr drawInRect:NSMakeRect(NSMaxX(cellFrame) - 70.0, NSMinY(cellFrame), 70.0, fontHeight) withAttributes:baseAttrs];
 	}
 
 	if (ColumnIsSet(NoteLabelsColumn, columnsBitmap)) {

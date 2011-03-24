@@ -58,7 +58,7 @@
 - (NSText *)setUpFieldEditorAttributes:(NSText *)textObj {
 	NSTextView *textView = (NSTextView*)[super setUpFieldEditorAttributes:textObj];
 	[textView setDrawsBackground:NO];
-		
+
 	return textView;
 }
 
@@ -296,6 +296,7 @@
 }
 
 - (void)mouseDown:(NSEvent*)anEvent {
+    [[NSApp delegate] setIsEditing:NO];
 	
 	if ([[self cell] handleMouseDown:anEvent])
 		return;

@@ -18,7 +18,7 @@
 @class NotesTableView;
 @class NoteObject;
 @class GlobalPrefs;
-@class ETTransparentScroller;
+//@class ETTransparentScroller;
 
 @interface LinkingEditor : NSTextView
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_6
@@ -28,7 +28,7 @@
     IBOutlet NSTextField *controlField;
     IBOutlet NotesTableView *notesTableView;
 	
-	ETTransparentScroller *nvTextScroller;
+	//ETTransparentScroller *nvTextScroller;
 	GlobalPrefs *prefsController;
 	BOOL didRenderFully;
 	

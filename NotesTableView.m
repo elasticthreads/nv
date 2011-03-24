@@ -309,7 +309,6 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 	
 	if (IsLeopardOrLater)
 		[self setSelectionHighlightStyle:horiz ? NSTableViewSelectionHighlightStyleSourceList : NSTableViewSelectionHighlightStyleRegular];
-	//[self setBackgroundColor: horiz ? [NSColor colorWithCalibratedWhite:0.98 alpha:1.0] : [NSColor whiteColor]];
 	
 	NSLayoutManager *lm = [[NSLayoutManager alloc] init];
 	tableFontHeight = [lm defaultLineHeightForFont:font];
@@ -444,8 +443,10 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 	}
 	
 	if (colIndex > -1) {
+        
 		[self editColumn:colIndex row:selected withEvent:[[self window] currentEvent] select:YES];
 	} else {
+        
 		NSBeep();
 	}
 }
@@ -729,7 +730,7 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 }
 
 - (void)mouseDown:(NSEvent*)event {
-	
+    [[NSApp delegate] setIsEditing:NO];
 	//this seems like it should happen automatically, but it does not.
 	if (![NSApp isActive]) {
 		[NSApp activateIgnoringOtherApps:YES];
@@ -786,9 +787,7 @@ static void _CopyItemWithSelectorFromMenu(NSMenu *destMenu, NSMenu *sourceMenu, 
 #define UPCHAR(x) ((x) == NSUpArrowFunctionKey || (x) == NSUpTextMovement)
 
 - (void)keyDown:(NSEvent*)theEvent {
-	
 	unichar keyChar = [theEvent firstCharacter];
-	
     if (keyChar == NSNewlineCharacter || keyChar == NSCarriageReturnCharacter || keyChar == NSEnterCharacter) {
 		unsigned int sel = [self selectedRow];
 		if (sel < (unsigned)[self numberOfRows] && [self numberOfSelectedRows] == 1) {
@@ -938,7 +937,11 @@ enum { kNext_Tag = 'j', kPrev_Tag = 'k' };
 }
 
 - (BOOL)textView:(NSTextView *)aTextView doCommandBySelector:(SEL)command {
-	
+    if ((command == @selector(insertTab:))||(command == @selector(insertNewline:))||(command == @selector(insertBacktab:))||(command == @selector(cancelOperation:))) {
+        [[NSApp delegate] setIsEditing:NO];
+    }//else {
+      //  NSLog(@"ntv got %@",NSStringFromSelector(command));
+    //}
 	if (command == @selector(moveToEndOfLine:) || command == @selector(moveToRightEndOfLine:)) {
 		
 		NSEvent *event = [[self window] currentEvent];
@@ -1060,8 +1063,8 @@ enum { kNext_Tag = 'j', kPrev_Tag = 'k' };
 	return lastEventActivatedTagEdit;
 }
 
-- (void)editColumn:(NSInteger)columnIndex row:(NSInteger)rowIndex withEvent:(NSEvent *)event select:(BOOL)flag {
-	
+- (void)editColumn:(NSInteger)columnIndex row:(NSInteger)rowIndex withEvent:(NSEvent *)event select:(BOOL)flag {	 
+    [[NSApp delegate] setIsEditing:YES];
 	BOOL isTitleCol = [self columnWithIdentifier:NoteTitleColumnString] == columnIndex;
 	
 	//if event's mouselocation is inside rowIndex cell's tag rect and this edit is in horizontal mode in the title column

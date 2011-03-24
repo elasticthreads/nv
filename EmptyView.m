@@ -11,7 +11,7 @@
 
 
 #import "EmptyView.h"
-#import "AppController.h"
+//#import "AppController.h"
 
 @implementation EmptyView
 
@@ -26,15 +26,15 @@
 
 - (void)awakeFromNib {
 	outletObjectAwoke(self);
-	
+	/*
 	if (!bgCol) {
 		bgCol = [[[NSApp delegate] backgrndColor] retain];
-	}
+	}*/
 
 }
 
 - (void)mouseDown:(NSEvent*)anEvent {
-	[[NSApp delegate] performSelector:@selector(showDualFieldView)];
+	[[NSApp delegate] performSelector:@selector(bringFocusToControlField:) withObject:nil];
 }
 
 - (void)setLabelStatus:(int)notesNumber {
@@ -58,9 +58,9 @@
 }
 
 - (BOOL)isOpaque {	
-	return YES;
+	return NO;
 }
-
+/*
 - (void)setBackgroundColor:(NSColor *)inColor{
 	if (bgCol) {
 		[bgCol release];
@@ -70,12 +70,13 @@
 }
 
 - (void)drawRect:(NSRect)rect {
-	NSRect bounds = [self bounds];
+	//NSRect bounds = [self bounds];
 	if (!bgCol) {
 		bgCol = [[[NSApp delegate] backgrndColor] retain];
 	}
 	//[bgCol set];
     //NSRectFill(bounds);
 }
+*/
 
 @end

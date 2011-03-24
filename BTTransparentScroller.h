@@ -16,4 +16,5 @@
 
 }
 -(void)setBackgroundColor:(NSColor*)bgcolor;
+
 @end

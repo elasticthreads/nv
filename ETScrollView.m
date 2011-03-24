@@ -25,6 +25,14 @@
     [super dealloc];
 }
 
+- (NSView *)hitTest:(NSPoint)aPoint{
+    if (NSPointInRect (aPoint,[[self verticalScroller] frame])) {
+        return [self verticalScroller];
+    }else{
+        return [self documentView];
+    }
+}
+
 /*
 - (void)awakeFromNib{
     // NSLog(@"etawake");
@@ -48,11 +56,7 @@
 
 }
 
-
-
-
-
-- (void)tile{
+ - (void)tile{
    [super tile];
     if ([self hasVerticalScroller]) {
         // NSLog(@"subviwes are: %@",[[self subviews] description]);

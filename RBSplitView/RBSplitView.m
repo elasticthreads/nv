@@ -820,7 +820,7 @@ static inline CGFloat fMAX(CGFloat a,CGFloat b) {
 	if ((rect.origin.x==0)&&(rect.origin.y==0)) {
 		[self setDividerThickness:7.0];
 	}else {
-		[self setDividerThickness: [self isVertical] ? 10.0 : 8.0];		
+		[self setDividerThickness:8.75f];// [self isVertical] ? 9.0f : 9.0f];		
 	}
 	if (leading||trailing) {
 		NSColor* bg = [self background];

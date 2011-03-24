@@ -130,6 +130,7 @@
 		57F27FB91197407400C63ACF /* SearchCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 57F27FB81197407400C63ACF /* SearchCommand.m */; };
 		5C1830CA132EA675005E2210 /* MarkupPreview.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5C1830CC132EA675005E2210 /* MarkupPreview.xib */; };
 		5C1830CD132EA687005E2210 /* SaveHTMLPreview.nib in Resources */ = {isa = PBXBuildFile; fileRef = 5C1830CF132EA687005E2210 /* SaveHTMLPreview.nib */; };
+		5C2FAD2B1333970200FBFD34 /* ETScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C2CD036132ED47900CA0D7C /* ETScrollView.m */; };
 		5C49E365131C5CC500696B68 /* Credits.html in Resources */ = {isa = PBXBuildFile; fileRef = 5C49E364131C5CC500696B68 /* Credits.html */; };
 		5C4B353E1307220E00014119 /* TransparentScrollerKnobTop.tif in Resources */ = {isa = PBXBuildFile; fileRef = 5C4B35361307220E00014119 /* TransparentScrollerKnobTop.tif */; };
 		5C4B35401307220E00014119 /* TransparentScrollerSlotBottom.tif in Resources */ = {isa = PBXBuildFile; fileRef = 5C4B35381307220E00014119 /* TransparentScrollerSlotBottom.tif */; };
@@ -1554,6 +1555,7 @@
 				5C96F6E9131C48FE00A2E4AC /* ETTransparentButton.m in Sources */,
 				5C9C7734131DA04300FB2652 /* WordCountToken.m in Sources */,
 				5CA08C2013301D5E004E3250 /* ETContentView.m in Sources */,
+				5C2FAD2B1333970200FBFD34 /* ETScrollView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

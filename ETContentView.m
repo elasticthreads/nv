@@ -44,4 +44,11 @@
     [backColor retain];
 }
 
+- (NSColor *)backgroundColor{    
+    if (!backColor) {
+        backColor = [[[NSApp delegate] backgrndColor] retain];
+    }
+    return backColor;
+}
+
 @end
